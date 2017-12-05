@@ -42,7 +42,7 @@ relative_link: false
 
 highlight:
   enable: true
-  auto_detect: true
+  auto_detect: false
   
   line_number: true
   tab_replace: ''
