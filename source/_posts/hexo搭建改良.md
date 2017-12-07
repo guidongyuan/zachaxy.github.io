@@ -166,11 +166,29 @@ deploy:
 
 
 以后我们在另一个终端进行发布时,同样创建一个`username.github.io`文件夹，然后依次执行
-- git init
-- git checkout -b hexo
-- git remote add origin git@github.com:zachaxy/zachaxy.github.io.git
-- npm install hexo、npm install、npm install hexo-deployer-git
-- git pull origin hexo(上一步并没有执行 hexo init 命令，因为该命令是生成 hexo 的文件结构用的，我们的文件结构已经保存在远程的 hexo 分支中，用 git pull 即可获取相同的分支结构)
+1. 安装 node.js
+2. git ini
+3. git checkout -b hexo
+4. git remote add origin git@github.com:zachaxy/zachaxy.github.io.git
+5. npm install hexo
+6. git pull origin hexo
+7. npm install
 
+
+
+
+要注意的地方:
+
+这里并没有像第一次搭建的时候执行 hexo init, 这是反而是用 git pull origin hexo 来替代的,因为这个hexo init 的目的是为了在当前目录下建立一些目录结构,而这些结构我们已经上传到了 github 上.
+
+既然目录结果一样,为什么一定要选远程仓库的,而不是用新的 hexo init, 这是因为我们的远程仓库上已经有了其它的主题配置,这个一会要用,还有一个重要的文件 `package.json`,这个文件里包含了我们创建博客时所需的额外的 node 插件,还记得我们在初始搭建环境的时候,安装的 `npm install hexo-deployer-git`和`npm install hexo-generator-search -S`吗?
+
+
+
+这些插件的版本,都已经写在了`package.json`中,接下来我们要执行的 `npm install`命令就是安装`package.json`中所指定的插件,这样省的我们在之前另一台电脑上安装了很多插件的情况下,在新电脑上一个一个的再去重新安装.
+
+
+
+同时在执行 npm install hexo 的时候,会生成一个多余的`package-lock.json`的文件,记得把这个文件添加到`.gitignore`文件中.
 
 接下来正常的创建 md，写博客，发布即可。
