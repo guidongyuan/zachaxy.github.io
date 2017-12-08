@@ -167,7 +167,7 @@ deploy:
 
 以后我们在另一个终端进行发布时,同样创建一个`username.github.io`文件夹，然后依次执行
 1. 安装 node.js
-2. git ini
+2. git init
 3. git checkout -b hexo
 4. git remote add origin git@github.com:zachaxy/zachaxy.github.io.git
 5. npm install hexo
