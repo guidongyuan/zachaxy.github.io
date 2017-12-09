@@ -1,7 +1,7 @@
 ---
 title: Groovy 相对 Java 的一些新玩意
 date: 2017-12-05 20:03:55
-tags: 构建工具
+tags: Groovy
 ---
 
 # Groovy 是轻量级的 Java

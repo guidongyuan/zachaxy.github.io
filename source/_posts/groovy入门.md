@@ -1,7 +1,7 @@
 ---
 title: groovy入门
 date: 2017-10-26 22:16:20
-tags: 构建工具
+tags: Groovy
 ---
 
 # 变量定义
