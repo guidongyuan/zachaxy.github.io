@@ -154,6 +154,7 @@ def emc = new ExpandoMetaClass(Man)
 emc.sing = { -> ... }
 emc.initialize()
 def mike = new Man()
+mile.metaClass = emc
 mike.sing()
 
 //方式 2
