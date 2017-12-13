@@ -4,13 +4,15 @@ date: 2017-05-07 10:53:02
 tags: JVM
 ---
 
-> 这一章节开始`JVM`的编写过程,首先解决第一个问题,就是在使用`JVM`的时候需要向`JVM`提供参数.那本节先提供一般`Java `命令行参数的格式,然后实现解析功能.完整的源码在[这里](https://github.com/zachaxy/JVM)
+这一章节开始`JVM`的编写,首先解决第一个问题,就是如何运行java程序，回想最开始学java时，写一个Hello.java的程序，使用`javac Hello.java`将源代码转换为class文件，然后使用`java Hello`运行程序。JVM是只认class文件的，如果想让JVM运行该Hello程序，就要通过java命令。本节将介绍java命令的，并通过命令参数，读取对应的class数据。本节的代码均在[classpath包](https://github.com/zachaxy/JVM)下
+
+<!--more-->
 
 
 
 # java 命令简介
 
-`Java`应用程序也需要一个入口点，这个入口点就是我们熟知的`main()`方法。如果一个类包含`public static void main(String[] args)`方法，这个类就可以用来启动Java应用程序，我们把这个类叫作主类.这个类是需要我们用命令行手动向JVM提供的;
+`Java`应用程序需要一个入口点，这个入口点就是我们熟知的`main()`方法。如果一个类包含`public static void main(String[] args)`方法，这个类就可以用来启动Java应用程序，我们把这个类叫作主类.这个类是需要我们用命令行手动向JVM提供的;
 
 Java命令一般有以下几种形式:
 

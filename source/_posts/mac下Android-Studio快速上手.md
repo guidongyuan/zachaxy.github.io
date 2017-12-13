@@ -130,3 +130,14 @@ export PATH=${PATH}:~/Library/Android/sdk/tools
 4. 重新连接手机即可使用
 
 5. 经过以上配置，以后如果还想调试其它手机，那么只需要将该手机的 `Product ID` 写入到 adb_usb.ini 文件中即可。
+
+# adb server无法启动
+
+在使用`adb shell`命令时，可能会遇到端口占用，无法启动adb server的问题。adb server使用的端口是5037，所以这时候可以列出使用5.07端口的进程，，然后杀掉占用5037端口的进程，再重新启动adb server
+
+1. `netstat -ano | findstr "5037"  `,eg:找到的端口号是xxxx
+2. `TASKLIST | findstr "xxxx"`
+3. `adb shell`
+
+目前已知会占用5037的服务有：金山毒霸，酷狗音乐，qq音乐等，这些软件有一个共同的特点：手机连接上电脑时，这些软件都会监听到。
+
