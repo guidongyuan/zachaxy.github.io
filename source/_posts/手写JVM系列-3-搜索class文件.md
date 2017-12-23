@@ -4,9 +4,9 @@ date: 2017-05-08 15:01:12
 tags: JVM
 ---
 
-> 本节的目的是根据`-cp`命令指定的class路径以及后面的`ClassName`,找到对应的class文件,然后简单的打印出该 class 文件的字节码.完整源码[在这里](https://github.com/zachaxy/JVM)
+> 本节的目的是根据`-cp`命令指定的class路径以及后面的`ClassName`,找到对应的class文件,然后简单的打印出该 class 文件的字节码.完整源码[classpath包中](https://github.com/zachaxy/JVM)
 
-
+<!--more-->
 
 # 关于classpath
 
@@ -32,7 +32,7 @@ tags: JVM
 
 ## 添加指向JDK启动类路径
 
-`Java`虚拟机将使用JDK的启动类路径来寻找和加载`Java`标准库中的类，因此需要某种方式指定`jre`目录的位置。命令行选项是个不错的选择，所以增加一个非标准选`-Xjre`选项.
+`Java`虚拟机将使用JDK的启动类路径来寻找和加载`Java`标准库中的类，因此需要某种方式指定`jre`目录的位置。命令行选项是个不错的选择，所以增加一个非标准选`-Xjre`选项。但是这一选项并不是必须的，目前已经实现了读取`JAVA_HOME`来寻找启动类路径的功能，所以`-Xjre`选项是在没有配置`JAVA_HOME`环境变量的情况下，使用的。如果本地机器上有该环境变量，则无需指定`-Xjre`
 
 
 
@@ -54,10 +54,10 @@ tags: JVM
 
 首先考虑一下在命令行使用时的可能的场景:
 
-1. 直接指定路径,后面跟类名:`java -cp aaa/bbb/ccc  ddd`
-2. 指定类所在的jar文件的路径,后面跟类名:`java -cp aaa/bbb/ccc.jar  ddd`
-3. 指定一个模糊路径,后面跟类名:`java -cp aaa/bbb/*  ddd`
-4. 指定若干个路径,后面跟类名(指定的类存在指定的某一条路径中,如果都存在那么以第一条为准):`java -cp aaa1/bbb/ccc;aaa2/bbb/ccc;aaa3/bbb/ccc;  ddd`
+1. 直接指定路径,后面跟类名:`java -cp aaa/bbb/ccc  ddd  arg1  arg2`
+2. 指定类所在的jar文件的路径,后面跟类名:`java -cp aaa/bbb/ccc.jar  ddd arg1  arg2`
+3. 指定一个模糊路径,后面跟类名:`java -cp aaa/bbb/*  ddd  arg1  arg2`
+4. 指定若干个路径,后面跟类名(指定的类存在指定的某一条路径中,如果都存在那么以第一条为准):`java -cp aaa1/bbb/ccc;aaa2/bbb/ccc;aaa3/bbb/ccc;  ddd  arg1  arg2`
 
 
 
