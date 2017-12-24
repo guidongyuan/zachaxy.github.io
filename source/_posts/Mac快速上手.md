@@ -38,12 +38,34 @@ tags: 工具
 
 - `⌘ + ⌥ + Esc` 类似 win 下的任务管理器，用来强制关闭应用
 
+休眠、关机
+
+- 休眠快捷键:`ctrl + shift + 右上角`
+- 关机快捷键:`cmd + opt + 右上角`
+
 最近常用的系统快捷键：
 
 - `⌘ + 空格` 打开 spotlight
 - `⌥ + 空格` 打开 iterm2
 - `⌃ + 空格` 中英文输入源切换；不知道为什么，搜狗输入法和系统自带英文输入法会非人为切换，这是要切换回来就用该快捷键
 
+
+# 显示隐藏文件
+`Command+Shift+.` 可以显示隐藏文件、文件夹，再按一次，恢复隐藏；但是这个方法是有版本限制的，目前在10.11上用不了;可能12上有用。
+
+另一种可行的方法命令行执行显示隐藏文件：
+
+```
+defaults write com.apple.finder AppleShowAllFiles -bool true;
+KillAll Finder
+```
+
+不显示,将上面的 true 改为 false 即可。
+
+## 解决 IDE 中配置环境变量的问题
+
+很多 IDE 需要制定 SDK 的位置。例如使用 Intellj Idea开发 Groovy，就需要配置其 GROOVY 的路径，可是其路径安装时被放在了一个隐藏路径下，而在 ide 中选择路径时，是无法显示隐藏路径的。
+解决方法：finder下使用Command+Shift+G 可以前往任何文件夹，包括隐藏文件夹。这时将隐藏的路径**拖到**左边的快速导航，然后在IDE 中选择路径，点击左侧的快速导航即可。
 
 
 # homebrew
@@ -55,7 +77,7 @@ mac os 中的软件包管理器，类似 CentOS 中的 yum，Ubuntu 中的 apt-g
 
 接下来就可以想 yum 那样在 macOS 中使用 brew 命令来安装软件了；
 
-Homebrew 会将软件包安装到独立目录(默认：/usr/local/Cellar)，并将其文件软链接至 /usr/local/bin
+Homebrew 会将软件包安装到独立目录(默认：/usr/local/Cellar)，并将可执行文件软链接至 /usr/local/bin
 
 ## 常用命令
 
@@ -68,6 +90,25 @@ Homebrew 会将软件包安装到独立目录(默认：/usr/local/Cellar)，并�
 
 - brew list：查看使用 brew install 安装过的软件
 - brew update：更新 homebrew，但是没有必要单独执行这个命令，我们每次在执行 brew install 的时候，都会先执行 brew update
+
+# sdkman
+之前在学习 groovy 的时候,查看groovy 的官网，其推荐的安装方式是先安装 sdkman， 然后通过 sdk man 来安装 groovy。
+sdkman 和前面介绍的 homebrew 有些类似，都是软件管理工具。而与 homebrew 不同的是，sdkman 不仅可以方便的安装软件，同时还可以管理多个开发工具版本之间的切换，eg：python2.x 和 python3.x，用 sdkman 就能很好的解决。
+其安装方式：
+
+```
+curl -s get.sdkman.io | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+```
+第一步是安装，第二步是将 sdkman 配置到环境变量中，因为我使用的是 zsh，所以其自动写到了 `.zshrc`文件中。
+最后其安装软件的方式也很简单，这里以安装 **GROOVY** 为例
+```
+sdk install groovy
+```
+其所下载的软件被放到了`/Users/用户名/.sdkman/candidates/`
+
+其安装软件的方式和 homebrew 是类似的，只需一个命令即可安装。
+当然其强大的地方还在于可以管理多个软件的版本，具体使用请参考[官网](http://sdkman.io/usage.html)
 
 # sublime
 
@@ -324,6 +365,16 @@ plugins=(
 
 最后修改配置，不要忘记执行： `source ~/.zshrc`，使配置生效
 
+# Java 环境配置
+[下载地址](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)找到MacOS 的安装包，直接双击安装即可。
+安装之后，不需要配置 Java 环境变量，直接在命令行就可以使用 Java 了，其安装位置是在：`/Library/Java/JavaVirtualMachines/`，同时系统也为刚刚的安装的 JDK 创建了软连接：`/usr/libexec/java_home`，也正是因为这个软连接，我们才可以在命令行中直接使用 Java 命令。
+
+## 配置 JAVA_HOME
+虽然在命令行已经可以直接使用 Java 命令了，但是一些软件依然需要`JAVA_HOME`的环境变量，在`./zshrc`中添加如下配置：
+```
+export JAVA_HOME=$(/usr/libexec/java_home)
+export PATH=$JAVA_HOME/bin:$PATH
+```
 # 参考
 
 [刚从 Windows 转到 macOS，如何快速上手操作](https://sspai.com/post/41371)
