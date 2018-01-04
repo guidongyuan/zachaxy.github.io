@@ -243,7 +243,7 @@ abstract void readInfo(ClassReader reader)
 
 
 ```java
-public class ConstantPool {
+public class RuntimeConstantPool {
     ConstantInfo[] infos;  //保存类文件常量池中的所有常量,常量分为多种类型,基本类型都有对应的常量,以及字符串等;(简言之,这就是常量池的抽象)
 
     int constantPoolCount; //class 文件中常量池中的常量数量
