@@ -4,16 +4,16 @@ date: 2018-01-10 20:48:57
 tags: JNI
 ---
 
-> 本节将会实现一个简单的 hello world 版的程序，目的是掌握 JNI 开发的流程，具体的实现细节会在后续进行介绍。
+> 前面已经介绍了在 [Windows 上快速的搭建 JNI 开发环境](https://zachaxy.github.io/2018/01/10/JNI%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/)本节将会实现一个简单的 hello world 版的程序，目的是掌握 JNI 开发的流程，具体的实现细节会在后续进行介绍。
 
 # JNI 开发流程梳理：
 
-    1. 在 java 文件，这里的 java 文件我们以 HelloJNI.java 举例。在其中定义 native 方法
-    2. 使用 javah HelloJNI 命令生成 HelloJNI.h 头文件(注意该命令后只跟文件名，不要带.java 后缀)
-    3. 使用 codeblocks 创建动态链接库工程，并将 HelloJNI.h 添加到该工程 
-    4. 实现 HelloJNI.h 中声明的方法
-    5. 使用 codeblocks build 该工程，得到 HelloJNI.dll 动态链接库
-    6. 将 HelloJNI.dll 拷贝到 java 工程中，直接使用即可。
+1. 在 java 文件，这里的 java 文件我们以 HelloJNI.java 举例。在其中定义 native 方法
+2. 使用 javah HelloJNI 命令生成 HelloJNI.h 头文件(注意该命令后只跟文件名，不要带.java 后缀)
+3. 使用 codeblocks 创建动态链接库工程，并将 HelloJNI.h 添加到该工程 
+4. 实现 HelloJNI.h 中声明的方法
+5. 使用 codeblocks build 该工程，得到 HelloJNI.dll 动态链接库
+6. 将 HelloJNI.dll 拷贝到 java 工程中，直接使用即可。
 
 <!--more-->
 
