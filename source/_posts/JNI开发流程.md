@@ -74,23 +74,13 @@ JNIEXPORT jstring JNICALL Java_HelloJNI_sGetStr
 #endif
 ```
 
-可以看到其首先就包含了`jni.h`文件，如果我们不做任何配置的话，codeblocks 在编译代码时是找不到这个头文件的。那么这个
-`jni.h`文件在哪里呢？
+可以看到其首先就包含了`jni.h`文件，如果我们不做任何配置的话，codeblocks 在编译代码时是找不到这个头文件的。那么这个`jni.h`文件在哪里呢？
 
 首先明确一点：你的 windows 上安装了 JDK，因为`jni.h`就在 JDK 的安装路径的 include 目录下，eg：我的电脑上的路径为：`D:\Program Files\Java\jdk1.8.0_20\include\`，同时`jni.h` 文件中还引入了 `jni_md.h` 文件，所以还要找到 `jni_md.h` 文件，其位于本机 jdk 的 `include\win32` 文件夹下：`D:\Program Files\Java\jdk1.8.0_20\include\win32\`
 
-明确了要准备的两个 h 文件的路径，接下来分别介绍两种方法让 codeblocks 在编译时能找到对应的头文件。
+明确了要准备的两个 h 文件的路径，接下来就要让 codeblocks 在编译时能找到对应的头文件。
 
-1. 配置环境变量，让 codeblocks 能找到该头文件。
-2. 直接将该头文件拷贝到当前工程。
-
-
-## 配置环境变量
-在 codeblocks 中 `Progect->build options->Search directories`，点击 add，将两个头文件对应路径加入。
-
-## 拷贝头文件（推荐）
-将这两个头文件都拷贝到当前工程文件夹下，同样的，使用 add files，将这两个文件添加到工程中。同时要注意，此时要将 HelloJNI.h 中的`#include <jni.h>`改为`#include "jni.h"`
-推荐这种方法，因为这样你将自己的 codeblocks 动态链接库工程文件拷给别人，别人是可以直接用的，但是如果用上面配置环境变量的方法，对方可能也要按照那种方法配置一下 codeblocks。
+我们将这两个头文件都拷贝到当前动态链接库工程的代码文件夹下，同样的，使用 add files，将这两个文件添加到工程中。同时要注意，此时要将 HelloJNI.h 中的`#include <jni.h>`改为`#include "jni.h"`
 
 
 # 实现 native 方法
@@ -121,13 +111,11 @@ JNIEXPORT jstring JNICALL Java_HelloJNI_sGetStr(JNIEnv * env, jclass clazz){
 
 # 生成 dll 文件
 
-在 codeblocks 左侧列表，鼠标当前 project 右键 选择 build，生成对应的 dll 文件，其路径为当前 project 路径下的：`bin\debug`
+在 codeblocks 左侧列表，鼠标当前 project 右键 选择 build，生成对应的 dll 文件，其路径为当前 project 路径下的：`bin\debug`中。
 
 # 在 Java 工程中使用 dll
 
-将上一步生成的 dll 文件拷贝到目标 java 工程的根路径
-
-不需其它配置，在 java 文件的**静态代码块**中加载对应的动态链接库，不需要 dll 后缀。然后运行该 java 程序，即可看到对应结果。
+将上一步生成的 dll 文件拷贝到目标 java 工程的根路径，不需其它配置，在 java 文件的**静态代码块**中加载对应的动态链接库，不需要 dll 后缀。然后运行该 java 程序，即可看到对应结果。
 
 ```java
 public class HelloJNI {
@@ -145,3 +133,13 @@ public class HelloJNI {
     }
 }
 ```
+
+
+# 优化
+
+在上一步中，直接把 dll 拷贝到 java 工程目录下了，但是这样有一个问题，那就是你每改动一点 c 的代码，都要重新生成 dll，然后在把该 dll 拷贝到 java 工程目录下，这样是很麻烦的。
+
+这里的 java 代码所用的 ide 是 idea，我们可以在 idea 中为当前工程设置一个环境变量， 让该变量直接定位到 codeblocks 工程生成 dll 的路径，这样就免去了不断拷贝 dll 文件的麻烦。具体做法是：在 idea 中点击`Run > Edit Configurations`，将需要加载dll文件的Java文件的 在`VM options`选项中加入`java.library.path`，即 dll（或so）文件所在的目录，比如本文中 dll 放在 codeblocks 项目目录中的 `E:\Csrc\HelloJNI\bin\Debug` 中，
+![idea设置librarypath](http://img.blog.csdn.net/20180110211542880?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvWmFjaGF4eQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+同时注意到：按照如图的配置，只能是为`AccessMethod.java`文件配置了路径，也就是说在其它文件要使用 dll 文件时，依然找不到 dll。如果你想为当前工程的所有 java 文件都配置`VM options`，每创建一个 java 文件就设置一次`VM options`也是挺麻烦的，我们可以在如图所示的`Defaults`下拉列表中找到 Application 的 选项，为 Application 选项设置具体的`VM options`，就可以让该工程下所有的 java 文件都可以使用 codeblocks 中生成的 dll 文件了。
