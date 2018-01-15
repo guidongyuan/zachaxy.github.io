@@ -142,4 +142,4 @@ public class HelloJNI {
 这里的 java 代码所用的 ide 是 idea，我们可以在 idea 中为当前工程设置一个环境变量， 让该变量直接定位到 codeblocks 工程生成 dll 的路径，这样就免去了不断拷贝 dll 文件的麻烦。具体做法是：在 idea 中点击`Run > Edit Configurations`，将需要加载dll文件的Java文件的 在`VM options`选项中加入`java.library.path`，即 dll（或so）文件所在的目录，比如本文中 dll 放在 codeblocks 项目目录中的 `E:\Csrc\HelloJNI\bin\Debug` 中，
 ![idea设置librarypath](http://img.blog.csdn.net/20180110211542880?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvWmFjaGF4eQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
-同时注意到：按照如图的配置，只能是为`AccessMethod.java`文件配置了路径，也就是说在其它文件要使用 dll 文件时，依然找不到 dll。如果你想为当前工程的所有 java 文件都配置`VM options`，每创建一个 java 文件就设置一次`VM options`也是挺麻烦的，我们可以在如图所示的`Defaults`下拉列表中找到 Application 的 选项，为 Application 选项设置具体的`VM options`，就可以让该工程下所有的 java 文件都可以使用 codeblocks 中生成的 dll 文件了。
+同时注意到：按照如图的配置，只能是为`AccessMethod.java`文件配置了路径，也就是说在其它文件要使用 dll 文件时，依然找不到 dll。所以要为每一个需要使用 dll 的 java 文件都配置`VM options`，虽然还是有些麻烦，但是已经比我们修改 c 代码后，不断的拷贝 dll 文件方便多了。我们的目的还是说快速的了解 JNI 的开发，真正使用 Android Studio 进行 NDK 开发时，就不需要老配置环境了。
