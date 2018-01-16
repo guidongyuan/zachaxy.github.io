@@ -240,4 +240,4 @@ arr3 此时的类型为 [I,依然需要用 classloader 进行加载，然后创�
 
 
 # 测试
-本节的测试代码在(TestNewArray09.java)[https://github.com/zachaxy/JVM/blob/master/Java/src/test/TestNewArray09.java]中。
+本节的测试代码在(TestNewArray09.java 中)[https://github.com/zachaxy/JVM/blob/master/Java/src/test/TestNewArray09.java]。
