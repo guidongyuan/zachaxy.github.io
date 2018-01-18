@@ -132,6 +132,10 @@ sdk install groovy
 - ⌘ + enter 另起一行
 - ⌘ + ⌃ 上下行切换
 
+- ⌘ + ⇧ + p 命令提示
+
+- ⌘ + ⌃ + p 切换工程
+
 ## 插件安装
 
 首先要安装的是 Package Control 插件，它是一个方便 Sublime text 管理插件的插件。
@@ -150,7 +154,7 @@ import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.
 - DocBlockr：注释块
 - SublimeLinter：代码检查，还需要和具体的语言插件配对才可以使用eg:SublimeLinter-javac 使用，最好还是用编译器写代码。。
 - SideBarEnhancements：mac 下的名称，win 下叫 sidebar，提供了侧边连的增强功能；
-  -
+
 
 ## 主题配置
 
@@ -189,9 +193,25 @@ import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.
 	"tab_size": 4,
 	"theme": "Material-Theme.sublime-theme",
 	"trim_trailing_white_space_on_save": true,
+	"update_check": false,
 	"word_wrap": true
 }
 ```
+
+## project 管理功能
+sublime 提供了像 IDE 那样基于 project 的功能，用来管理一组文件夹。只要保存为 project，那么下次再打开该 project 时，就会恢复上次打开的文件。这个功能在平时的工作中非常实用。
+
+打开 sublime，注意此时 sublime 的窗口中不能有其它文件，否则一会儿保存为 project 时会将当前窗口的所有文件一块存入 project，然而 sublime 默认打开是会将上次关闭前打开的文件都打开的。所以，如果想单独创建一个 project，可以通过`cmd + shift + n`(win 下快捷键为：`ctrl + shift + n`) 重新打开一个窗口，此时再将想要打开的文件夹拖入当前窗口，或者用 `project -> Add Folder to Project` 选择文件夹。同时我们在一个 project 中可以打开多个(不同路径)文件夹，然后选择 `Project -> Save Project As...` 自定义该 project 的名字和保存路径，此时会在保存路径下生成两个文件，分别为`.workspace`和`.project`。前者文件中保存的是当前窗口已经打开的文件，这样下次打开该 project 时还会恢复。后者保存的是当前 project 中的所有文件的路径，前面也说了 sublime 中的 project 中可以添加多个文件夹进来。
+
+tips：
+1. project 文件最好集中保存到一个特定的目录下，这样方便统一管理。
+2. 基于上一点，每次保存 project 时，都要选择指定的保存路径，所以推荐`project manager`的插件，在配置文件中指定路径，这样就免去每次保存 project 时选择路径的麻烦。
+3. 多个 project 的快速切换`cmd + ctrl + p`（win 下快捷键为：`ctrl + alt + p`），选择要切换的 project，这样的话当前窗口就会被替换为目标 project。如果你想打开多个 project，那么就用`cmd + shift + n`打开一个新的窗口，再用`cmd + ctrl + p`打开新的 project 即可。
+
+project manager 的插件的使用
+在安装了该插件之后，首先要在该插件的配置文件中配置 project 保存的路径。在新建项目时，打开一个空白窗口，向其中拖入文件夹，然后使用`cmd + shift + p`打开命令行，输入`pm`，选择`Add New Project`，此时会在 sublime 底部弹出文本框，输入 project 的名字，那么该 project 就会被保存到之前配置的路径中。
+
+
 
 # Iterm2 的使用
 
@@ -365,6 +385,38 @@ plugins=(
 
 最后修改配置，不要忘记执行： `source ~/.zshrc`，使配置生效
 
+# vim 配置
+很多时候查看配置文件，会使用 vim，其实上面介绍的 sublime 也很好用，不过有的人还是习惯用 vim，那么简单介绍一下 vim 的相关配置。
+
+1. `cp /usr/share/vim/vimrc ~/.vimrc`,先复制一份vim配置模板到个人目录下，这样就使得仅对当前用户有效
+2. 编辑`~/.vimrc`，加入 `set nu!` 显示行号
+
+附其它常用配置：
+```
+set nocompatible                 "去掉有关vi一致性模式，避免以前版本的bug和局限
+set nu!                                    "显示行号
+set guifont=Luxi/ Mono/ 9   " 设置字体，字体名称和字号
+filetype on                              "检测文件的类型
+set history=1000                  "记录历史的行数
+set background=dark          "背景使用黑色
+syntax on                                "语法高亮度显示
+set autoindent                       "vim使用自动对齐，也就是把当前行的对齐格式应用到下一行(自动缩进）
+set cindent                             "（cindent是特别针对 C语言语法自动缩进）
+set smartindent                    "依据上面的对齐格式，智能的选择对齐方式，对于类似C语言编写上有用
+set tabstop=4                        "设置tab键为4个空格，
+set shiftwidth =4                   "设置当行之间交错时使用4个空格
+set ai!                                      " 设置自动缩进
+set showmatch                     "设置匹配模式，类似当输入一个左括号时会匹配相应的右括号
+set guioptions-=T                 "去除vim的GUI版本中得toolbar
+set vb t_vb=                            "当vim进行编辑时，如果命令错误，会发出警报，该设置去掉警报
+set ruler                                  "在编辑过程中，在右下角显示光标位置的状态行
+set nohls                                "默认情况下，寻找匹配是高亮度显示，该设置关闭高亮显示
+set incsearch    "在程序中查询一单词，自动匹配单词的位置；如查询desk单词，当输到/d时，会自动找到第一个d开头的单词，当输入到/de时，会自动找到第一个以ds开头的单词，以此类推，进行查找；当找到要匹配的单词时，别忘记回车
+set backspace=2           " 设置退格键可用
+```
+
+其实 zsh 已经把很多参数默认改好了，包括颜色方案啥的，很多都可以用设置的，直接用就行了
+
 # Java 环境配置
 [下载地址](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)找到MacOS 的安装包，直接双击安装即可。
 安装之后，不需要配置 Java 环境变量，直接在命令行就可以使用 Java 了，其安装位置是在：`/Library/Java/JavaVirtualMachines/`，同时系统也为刚刚的安装的 JDK 创建了软连接：`/usr/libexec/java_home`，也正是因为这个软连接，我们才可以在命令行中直接使用 Java 命令。
@@ -375,6 +427,25 @@ plugins=(
 export JAVA_HOME=$(/usr/libexec/java_home)
 export PATH=$JAVA_HOME/bin:$PATH
 ```
+
+
+# 配置环境变量的配置问题
+
+mac 中用要下载各种工具，然后配置环境变量，拿 gradle 的配置来说，在 `.zshrc` 中配置其环境变量，
+之前的配置方式是：
+```
+# add Gradle_Home
+#export GRADLE_HOME=$(/Users/zachaxy/mygradle/gradle-4.1)
+export PATH=$PATH:$GRADLE_HOME/bin
+```
+然后总是提示 `permission denied: /Users/zachaxy/mygradle/gradle-4.1`,可是之前 Java 的环境变量就是这样配置的，就没有问题。
+后来改成如下的方式，就可以了。
+```
+# add Gradle_Home
+export GRADLE_HOME=/Users/zachaxy/mygradle/gradle-4.1
+export PATH=$PATH:$GRADLE_HOME/bin
+```
+
 # 参考
 
 [刚从 Windows 转到 macOS，如何快速上手操作](https://sspai.com/post/41371)
