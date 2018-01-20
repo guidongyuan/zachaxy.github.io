@@ -1,8 +1,8 @@
 {% extends "_layout.swig" %}
-{% import '_partial/post.swig' as postPage %}
+{% import '_partial/post.swig' as postt %}
 
 {% block title %} {{ page.title }} · {{ config.title }} {% endblock %}
 
 {% block main %}
-    {{ postPage.render(page) }}
+    {{ postt.render(page) }}
 {% endblock %}

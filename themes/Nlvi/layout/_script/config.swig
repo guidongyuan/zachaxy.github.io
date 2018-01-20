@@ -1,11 +1,8 @@
 <script>
-    var NlviConfig = {
+    var CONFIG = {
         title: "{{ config.title }}",
         author: "{{ config.author }}",
-        theme: "{{ theme.scheme }}",
         lightbox: {{ theme.lightbox }},
-        animate: {{ theme.animate }},
-        baseUrl: "{{ url_for('/') }}",
-        search: {{ theme.search }}
+        animate: {{ theme.animate }}
     }
 </script>

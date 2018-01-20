@@ -6,17 +6,9 @@
 
 [主题文档|Theme Wiki](https://github.com/ColMugX/hexo-theme-Nlvi/wiki)
 
-![Nlvi-desktop](https://github.com/ColMugX/GitBed/raw/master/blog/nlvi/desktop.png)
+![Nlvi-desktop](https://github.com/ColMugX/GitBed/raw/master/blog/slvi-desktop.png)
 
-![Nlvi-device](https://github.com/ColMugX/GitBed/raw/master/blog/nlvi/devices.png)
-
-![Nlvi-line-block](https://github.com/ColMugX/GitBed/raw/master/blog/nlvi/line-block.png)
-
-![Nlvi-schemes](https://github.com/ColMugX/GitBed/raw/master/blog/nlvi/schemes.png)
-
-![Nlvi-mobile](https://github.com/ColMugX/GitBed/raw/master/blog/nlvi/mobile.png)
-
-(前排提醒老粉：你们熟悉的Nlvi现已归入1.x分支)
+![Nlvi-mobile](https://github.com/ColMugX/GitBed/raw/master/blog/slvi-mobile.png)
 
 目前我自己最满意的主题，就这个主题持续维护一直到过气。
 
@@ -24,24 +16,25 @@
 
 ## 特点 Special
 
-- 使用了动画库 [Syuanpi.css](https://colmugx.github.io/Syuanpi.css)
-- 使用了lightbox
-- 文章打赏
-- 版权说明
-- 五颜六色，初音绿（真·五种颜六种色）
+- 使用了动画库 [Syuanpi.css](https://colmugx.github.io/Syuanpi.css)（极轻，未来将支持更多内容
+- 动画可以关闭
+- 使用了lightbox（并没有随波逐流fancybox
+- 传递心意的本地搜索功能
+- 文章打赏，打赏自定义
+- 版权说明，协议自定义
+- 五颜六色（熊猫的心愿
+- 可定制范围大
 
 ## 语言 Language
 
 - 简体中文
 - 正體中文（你可以告知我哪裡出問題，多謝。）
-- English ( Please tell me where wrong, Thx. )
-- 日本語 「君は私の問題を指示することができです、ありがとうございました。」
+- English ( You can tell me where wrong, Thx. )
+- 日本語 「君は私の問題を指示することができます、ありがとうございました。」
 
 ## 下载 Download
 
-你有三种方式下载到Nlvi
-
-1. `git clone https://github.com/ColMugX/hexo-theme-Nlvi.git theme/Nlvi`
+1. `git clone theme/Nlvi https://github.com/ColMugX/hexo-theme-Nlvi.git`
 
 2.  `Download ZIP`
 
@@ -62,10 +55,16 @@ theme: Nlvi
 
 要把_source文件夹里面的about拷贝到项目中的source中，**这点很重要！**
 
+在主题的`_config.yml`应该没什么好配置的。比较浅显易懂。
+
 
 ## 博客动图展示 Gif
 
+![Nlvi-gif](https://github.com/ColMugX/GitBed/raw/master/blog/slvi-gif.gif)
+
 ### 支持 Support
 
-Issue or Email
+有什么对这个主题看法或者指教可以直接issue。
+
+或者直接到知乎打我！
 
