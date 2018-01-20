@@ -1,2 +1,2 @@
-{% include "_head/mata.swig" %}
-{% include "_head/link.swig" %}
+{% include "./_head/link.swig" %}
+{% include "./_head/meta.swig" %}

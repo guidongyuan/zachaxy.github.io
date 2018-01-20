@@ -1,10 +1,9 @@
 {{ css('style/style') }}
-{{ js('script/jquery.min') }}
 {% include "../../_script/config.swig" %}
 
 {# lightbox #}
 {% if theme.lightbox %}
-    {{ css('lightbox/css/lightbox.min') }}
+    {{ css('script/lib/lightbox/css/lightbox.min') }}
 {% endif %}
 
 {# animation #}

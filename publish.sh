@@ -2,5 +2,4 @@
 hexo g -d
 git add .
 git commit -m "add source file"
-# 待完善，因为追踪关系不一定确定
 git push

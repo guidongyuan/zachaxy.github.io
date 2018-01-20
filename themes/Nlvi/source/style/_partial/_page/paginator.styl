@@ -14,18 +14,18 @@
 
     .extend
         text-decoration none
-        color $color-main
+        color $theme-color-text
         font-size 18px
 
         &.next
             float right
             &:hover
-                color $color-highlight
+                color $theme-color-main
                 transform translateX(10%)
         &.prev
             float left
             &:hover
-                color $color-highlight
+                color $theme-color-main
                 transform translateX(-10%)
         +mobile()
             font-size 14px
@@ -38,12 +38,12 @@
         text-align center
     a
         text-decoration none
-        color $color-main
+        color $theme-color-text
         font-size 16px
         +mobile()
             font-size 12px
         &:hover
-            color $color-highlight
+            color $theme-color-main
 
     .next-title
     .prev-title

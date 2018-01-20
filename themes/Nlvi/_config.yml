@@ -11,7 +11,7 @@ menu:
   # RSS: /atom.xml
 
 # favicon
-favicon:
+favicon: img/favicon.ico
 
 # ===========================================
 # Article Setting
