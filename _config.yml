@@ -3,30 +3,33 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: zachaxy的博客
+title: zachaxy
 subtitle: 纵情向前！
 description: 哈哈~
 author: zachaxy
 email: zachaxy@163.com
 keywords: zachaxy
-language: zh-CN #zh-CN / zh-TW / ja / en
-timezone: Asia/Shanghai #and more
+language: zh-Hans #zh-CN / zh-TW / ja / en
+timezone: #Asia/Shanghai #and more
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 #url: https://zachaxy.github.io/zachaxy.github.io
 url: https://zachaxy.github.io/
 root: /
-
+#生成文件名字的格式
 permalink: :year/:month/:day/:title/
-# Directory
+permalink_defaults:
+
+
+
+# Directory 目录配置
 source_dir: source
 public_dir: public
 tag_dir: tags
 archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
-permalink_defaults:
 
 
 
@@ -40,10 +43,10 @@ render_drafts: false
 post_asset_folder: false
 relative_link: false
 
+# 代码块的设置
 highlight:
   enable: true
   auto_detect: false
-
   line_number: true
   tab_replace: ''
 
@@ -92,15 +95,10 @@ disqus_shortname:
 #  - hexo-generator-baidu-sitemap
 #  - hexo-generator-sitemap
 
-theme: Nlvi
+theme: Next
 exclude_generator:
 
-# Deployment
-## Docs: http://hexo.io/docs/deployment.html
-#deploy:
-#  type: git
-#  repository: git@github.com:litten/litten.github.com.git
-#  branch: master
+
 
 #deploy:
 #  type: rsync
@@ -110,6 +108,8 @@ exclude_generator:
 #  port: 22
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
+
+# Deployment
 deploy:
   type: git
   repo: git@github.com:zachaxy/zachaxy.github.io.git
@@ -120,6 +120,7 @@ deploy:
 #baidusitemap:
 #    path: baidusitemap.xm
 
+# 订阅相关
 #feed:
 #    type: atom
 #    path: atom.xml
@@ -127,6 +128,6 @@ deploy:
 
 
 
-search:
-  path: search.xml
-  field: post
+#search:
+#  path: search.xml
+#  field: post
