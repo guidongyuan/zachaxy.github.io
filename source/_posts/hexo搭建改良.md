@@ -170,7 +170,7 @@ deploy:
 2. git init
 3. git checkout -b hexo
 4. git remote add origin git@github.com:zachaxy/zachaxy.github.io.git
-5. npm install hexo
+5. npm install -g hexo 
 6. git pull origin hexo
 7. npm install
 

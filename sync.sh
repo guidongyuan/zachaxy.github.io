@@ -3,7 +3,7 @@
 git init
 git checkout -b hexo
 git remote add origin git@github.com:zachaxy/zachaxy.github.io.git
-npm install hexo
+npm install -g hexo
 git pull origin hexo
 # 上面是将远程的hexo分支与当前(本地hexo分支)合并
 # 下面是为本地hexo与origin/hexo 建立追踪关系，这也publish.sh中就可以直接git push
