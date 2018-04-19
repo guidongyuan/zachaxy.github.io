@@ -8,10 +8,10 @@ tags: Android UI 专题
 ## AsyncTask详解
 
 ### AsyncTask中的参数
-AsyncTask是一个抽象类,如果我们想使用它就要自定义一个子类去继承它.集成时我们可以为
+AsyncTask是一个抽象类,如果我们想使用它就要自定义一个子类去继承它。继成时我们可以为
 AsyncTask制定三个泛型参数:
 
-- Params:执行AsyncTask时传入的参数类型
+- Params:调用AsyncTask的excute方法时传入的参数类型，如果该方法传入了多个不同类型的参数，那么就定义为Object。
 - Progress:执行AsyncTask时如果需要在前台显示进度条,使用该类型作为进度的单位
 - Result:当AsyncTask结束后,如果需要对结果进行返回,该类型作为返回值的类型
 

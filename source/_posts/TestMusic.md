@@ -1,7 +1,7 @@
 ---
 title: TestMusic
 date: 2018-01-23 13:02:53
-tags:
+tags: 其它
 ---
 
 测试音乐播放器。依次使用了 iframe，audio，embed三个标签，推荐指数逐渐降低。
