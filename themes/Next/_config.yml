@@ -784,26 +784,26 @@ vendors:
 
   # Internal version: 1.0.0
   # https://github.com/hustcc/canvas-nest.js
-  canvas_nest:
+  canvas_nest: false
 
   #three
-  three:
+  three: false
 
   # three_waves
   # https://github.com/jjandxa/three_waves
-  three_waves:
+  three_waves: false
 
   # three_waves
   # https://github.com/jjandxa/canvas_lines
-  canvas_lines:
+  canvas_lines: false
 
   # three_waves
   # https://github.com/jjandxa/canvas_sphere
-  canvas_sphere:
+  canvas_sphere: false
 
   # Internal version: 1.0.0
   # https://github.com/zproo/canvas-ribbon
-  canvas_ribbon:
+  canvas_ribbon: false
 
   # Internal version: 3.3.0
   # https://github.com/ethantw/Han
