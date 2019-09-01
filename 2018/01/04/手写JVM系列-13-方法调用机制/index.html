@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.cat.net/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JVM,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="我们知道一个程序的运行的逻辑就是在一个代码块中不断的调用方法，将这些方法的调用堆砌好之后就形成的程序的逻辑。有了前面介绍的知识基础，接下来就来介绍下方法的执行过程。本节的代码主要是在instructions-references包下的 invokeXXX 指令。同时也可以配合测试用例TestInvokeMethod08加深了解。  方法的调用机制注:方法的调用不等同与方法的执行,方法的调用阶段只">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手写JVM系列(13)-方法调用机制">
+<meta property="og:url" content="https://zachaxy.github.io/2018/01/04/手写JVM系列-13-方法调用机制/index.html">
+<meta property="og:site_name" content="zachaxy">
+<meta property="og:description" content="我们知道一个程序的运行的逻辑就是在一个代码块中不断的调用方法，将这些方法的调用堆砌好之后就形成的程序的逻辑。有了前面介绍的知识基础，接下来就来介绍下方法的执行过程。本节的代码主要是在instructions-references包下的 invokeXXX 指令。同时也可以配合测试用例TestInvokeMethod08加深了解。  方法的调用机制注:方法的调用不等同与方法的执行,方法的调用阶段只">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-01T11:13:24.303Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手写JVM系列(13)-方法调用机制">
+<meta name="twitter:description" content="我们知道一个程序的运行的逻辑就是在一个代码块中不断的调用方法，将这些方法的调用堆砌好之后就形成的程序的逻辑。有了前面介绍的知识基础，接下来就来介绍下方法的执行过程。本节的代码主要是在instructions-references包下的 invokeXXX 指令。同时也可以配合测试用例TestInvokeMethod08加深了解。  方法的调用机制注:方法的调用不等同与方法的执行,方法的调用阶段只">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://zachaxy.github.io/2018/01/04/手写JVM系列-13-方法调用机制/">
+
+
+
+
+
+  <title>手写JVM系列(13)-方法调用机制 | zachaxy</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zachaxy</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">纵情向前！</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2018/01/04/手写JVM系列-13-方法调用机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zachaxy">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zachaxy">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">手写JVM系列(13)-方法调用机制</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-04T20:46:26+08:00">
+                2018-01-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,184
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>我们知道一个程序的运行的逻辑就是在一个代码块中不断的调用方法，将这些方法的调用堆砌好之后就形成的程序的逻辑。有了前面介绍的知识基础，接下来就来介绍下方法的执行过程。本节的代码主要是在<a href="https://github.com/zachaxy/JVM/tree/master/Java/src/instructions/references" target="_blank" rel="noopener">instructions-references包下的 invokeXXX 指令</a>。同时也可以配合<a href="https://github.com/zachaxy/JVM/blob/master/Java/src/test/TestInvokeMethod08.java" target="_blank" rel="noopener">测试用例TestInvokeMethod08</a>加深了解。</p>
+</blockquote>
+<h1 id="方法的调用机制"><a href="#方法的调用机制" class="headerlink" title="方法的调用机制"></a>方法的调用机制</h1><p>注:方法的调用不等同与方法的执行,方法的调用阶段只是用来确定被调用的是哪一个方法，拿到具体的方法之后，就可以拿到其字节码指令，从而执行程序了。</p>
+<p>JVM 中方法调用的指令有以下五条：</p>
+<ul>
+<li>invokestatic:调用静态方法</li>
+<li>invokespecial:调用实例构造器<code>&lt;init&gt;</code>方法,私有方法和父类方法</li>
+<li>invokevirtual:调用所有的虚方法</li>
+<li>invokeinterfae:调用接口方法(在运行时确定实现了此接口的一个具体对象)</li>
+<li>invokenative:本地方法的调用</li>
+</ul>
+<p>前两个在解析阶段就可以确定唯一的调用版本，而后两个需要在调用时寻找真正的 method。</p>
+<a id="more"></a>
+
+<h1 id="方法调用执行流程概述"><a href="#方法调用执行流程概述" class="headerlink" title="方法调用执行流程概述"></a>方法调用执行流程概述</h1><p>本地方法的执行不在本节讨论之内！<br>invokeXXX 指令的执行：<br>(1)首先该系列的指针的操作数是指向运行时常量池的一个索引，由该索引从运行时常量池获取一个方法引用，再将该方法引用转为直接引用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RuntimeConstantPool runtimeConstantPool = frame.getMethod().getClazz().getRuntimeConstantPool();</span><br><span class="line"><span class="comment">//通过index,拿到方法符号引用</span></span><br><span class="line">MethodRef methodRef = (MethodRef) runtimeConstantPool.getRuntimeConstant(index).getValue();</span><br><span class="line"><span class="comment">//将 methodRef 转换为 Method</span></span><br><span class="line">Zmethod resolvedMethod = methodRef.resolvedMethod();</span><br></pre></td></tr></table></figure>
+
+<p>(2)获取到resolvedMethod方法之后，需要进行一定的权限验证，例如：invokestatic 就要验证 resolvedMethod 是否是 static 的；还有 resolvedMethod 方法是否可以在外部访问（private，protect）的情况等，如果权限验证不通过，则抛出 IllegalAccessError 异常。</p>
+<p>(3)为新方法创建栈帧 newFrame，每个方法的执行都是在自己的 Frame 中，只是创建栈帧，并不压栈，当前栈帧的栈顶依然是调用该方法的栈帧-invokerFrame。</p>
+<p>(4)为即将要调用的方法传递参数，这也是方法执行中很重要的一部分，待执行的方法所需的参数由 invokerFrame 的操作数栈提供，此时需要将 invokerFrame 的操作数栈的弹出对应的操作数，放到 newFrame 的本地变量表中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Zthread thread = invokerFrame.getThread();</span><br><span class="line">Zframe newFrame = thread.createFrame(method);</span><br><span class="line">thread.pushFrame(newFrame);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> argSlotCount = method.getArgSlotCount();</span><br><span class="line"><span class="keyword">if</span> (argSlotCount &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = argSlotCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        Slot slot = invokerFrame.getOperandStack().popSlot();</span><br><span class="line">        newFrame.getLocalVars().setSlot(i, slot);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里需要思考的一个问题是：如果确定方法所需的参数的数量？答案就是根据方法的描述符来确定，同时如果方法是非静态方法，那么其第一个参数就是调用该方法的引用自身，虽然我们并没有在代码中显式的写，但是 Java 编译器在编译成字节码时，帮我们做了。</p>
+<p>(5)将 newFrame 压栈，由解释器具体执行具体的方法。</p>
+<h1 id="多态调用的本质。"><a href="#多态调用的本质。" class="headerlink" title="多态调用的本质。"></a>多态调用的本质。</h1><p>通过 invokevirtual 指令调用来进行说明。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">f1</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">extends</span> <span class="title">Parent</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">f1</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">    Parent p = <span class="keyword">new</span> Child();</span><br><span class="line">    p.f1();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的 main 方法对应的字节码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> 0 new #3 &lt;Child&gt;</span><br><span class="line"> 3 dup</span><br><span class="line"> 4 invokespecial #4 &lt;Child.&lt;init&gt;&gt;</span><br><span class="line"> 7 astore_1</span><br><span class="line"> 8 aload_1</span><br><span class="line"> 9 invokevirtual #5 &lt;Parent.f1&gt;</span><br><span class="line">12 return</span><br></pre></td></tr></table></figure>
+
+<p>假设 main 方法所在的栈帧的 frame1，</p>
+<ol>
+<li>执行指令 new，该指令后跟一个运行时常量池的索引，通过该索引，获取到一个 ClassRef，其名字是 Child，那么接下来就加载 child 类，并创建该类的一个对象p，并将 p 对象放在 frame1的操作数栈上</li>
+<li>执行指令 dup，该指令是将操作数栈顶的slot 复制一份，所以此时 frame1的操作数栈有两个 p 的引用，同时要注意的是这两个 p 指向的是同一块内存的对象。</li>
+<li>执行指令 invokespecial，因为上一步 new 只是为 child 对象申请了空间，该对象的各个字段都是类零值，那么下面就要对该对象进行初始化赋值了。特别要注意的是:该 init 方法也是普通的方法，虽然不是我们自己写的，非静态方法在执行时实际的第一个参数是自身，所需的参数从哪里来呢？答案就是 frame1的操作数栈，因为执行init 方法需要参数（该方法没有其它的参数，只有一个隐式的 this），所以从 frame1的操作数弹出一个引用，那么此时 frame1 的操作数栈就只剩下一个 p 的引用了。</li>
+<li>接下来创建 frame2 执行 init 方法，由该方法初始化传入的 p 所指向的内存对象，大家不要忘记之前 dup 指令是的 frame1 的操作数栈中有两个 p，这只是引用，指向的同一块内存，所以在 frame2 中将对 p 初始化好之后，frame2被弹栈，此时回到 frame1，其操作数栈的 p 所指向的内存就是被 init 方法初始化好的。</li>
+<li>执行指令 astore_1，将操作数栈顶的元素弹出，保存到 frame1的本地变量表，索引为1</li>
+<li>执行指令 aload_1，将 frame1的本地变量表索引为1的元素压入操作数栈。此时 frame1的操作数栈为 p ，额。。。</li>
+<li>执行指令 invokevirtual，该指令后跟一个运行时常量池索引，通过该索引，获取到一个 methodRef，注意该 methodRef 是 Parent 的，而不是 Child 的，虽然该方法实际上应该就是 child 的，先不管这些。拿到 methodRef 之后，将其转换为 method，然后进行权限验证。通过后寻找真正的 method，从哪里寻找？我们看到这个方法依然是非静态方法，所以依然需要一个 this 的引用，依然需要从 frame1 的操作数栈顶 pop 一个引用，这个引用就是 p，但是我们注意看 p 在第一步时创建的类型是 child，所以接下从 this （也就是 p）中重新寻找 method，得到真正的 method，自然就是 child 的 f1 方法了。这就是多态的本质。</li>
+<li>最终执行 return 指令，结束 main 方法的执行。</li>
+</ol>
+<p>invoke_virtual 指令的执行过程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">INVOKE_VIRTUAL</span> <span class="keyword">extends</span> <span class="title">Index16Instruction</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Zframe frame)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//调用该方法所在的类</span></span><br><span class="line">        Zclass currentClass = frame.getMethod().getClazz();</span><br><span class="line">        RuntimeConstantPool runtimeConstantPool = currentClass.getRuntimeConstantPool();</span><br><span class="line">        <span class="comment">//通过index,拿到方法符号引用,虚方法(用到了多态),这个方法引用指向的其实是父类的</span></span><br><span class="line">        MethodRef methodRef = (MethodRef) runtimeConstantPool.getRuntimeConstant(index).getValue();</span><br><span class="line">        <span class="comment">//将方法引用转换为方法</span></span><br><span class="line">        <span class="comment">//这一步拿到解析后的resolvedMethod主要是用来做下面权限的验证;</span></span><br><span class="line">        <span class="comment">//而真正的resolvedMethod是在下面拿到真正的调用者,再次解析到的methodToBeInvoked</span></span><br><span class="line">        Zmethod resolvedMethod = methodRef.resolvedMethod();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//从操作数栈中获取调用该非静态方法的引用;参数的传递是从当前frame的操作数栈中根据参数个数,完整的拷贝到调用frame的本地变量表中;</span></span><br><span class="line">        Zobject ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getArgSlotCount() - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (ref == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"called "</span> + resolvedMethod.getName() + <span class="string">" on a null reference!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//相对于invokespecial,本指令还多了这一步,因为ref才是真正的调用者</span></span><br><span class="line">        <span class="comment">//而这次解析到的才是真正的method,这是多态的核心!</span></span><br><span class="line">        Zmethod methodToBeInvoked = MethodLookup.lookupMethodInClass(ref.getClazz(),</span><br><span class="line">                methodRef.getName(), methodRef.getDescriptor());</span><br><span class="line">        <span class="keyword">if</span> (methodToBeInvoked == <span class="keyword">null</span> || methodToBeInvoked.isAbstract()) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> AbstractMethodError(methodToBeInvoked.getName());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Zthread thread = invokerFrame.getThread();</span><br><span class="line">        Zframe newFrame = thread.createFrame(method);</span><br><span class="line">        thread.pushFrame(newFrame);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> argSlotCount = method.getArgSlotCount();</span><br><span class="line">        <span class="keyword">if</span> (argSlotCount &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = argSlotCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">                Slot slot = invokerFrame.getOperandStack().popSlot();</span><br><span class="line">                newFrame.getLocalVars().setSlot(i, slot);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="方法的返回"><a href="#方法的返回" class="headerlink" title="方法的返回"></a>方法的返回</h1><p>方法的返回是有 xreturn 指令实现的。其中 x 表示返回值的类型，有基本类型和引用类型，当然也有 void 类型。</p>
+<p>void 类型的返回是最简单的，直接将当前方法所在的 frame 弹出栈帧即可。<br>而对于有返回值的return 指令，返回时，返回值在 执行方法的frame 的操作数栈顶，此时需要拿到该返回值 value ，然后弹出当前 frame，回到方法调用的 frame，将 value 放到方法调用 frame 的操作数栈。</p>
+<p>以 areturn 指令的执行做一个说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Zthread thread = frame.getThread();</span><br><span class="line">Zframe currentFrame = thread.popFrame();</span><br><span class="line">Zframe invokerFrame = thread.getCurrentFrame();</span><br><span class="line">Zobject val = currentFrame.getOperandStack().popRef();</span><br><span class="line">invokerFrame.getOperandStack().pushRef(val);</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    zachaxy
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://zachaxy.github.io/2018/01/04/手写JVM系列-13-方法调用机制/" title="手写JVM系列(13)-方法调用机制">https://zachaxy.github.io/2018/01/04/手写JVM系列-13-方法调用机制/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/04/手写JVM系列-12-类加载器的实现/" rel="next" title="手写JVM系列(12)-类加载器的实现">
+                <i class="fa fa-chevron-left"></i> 手写JVM系列(12)-类加载器的实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/10/Windows配置JNI开发环境/" rel="prev" title="Windows配置JNI开发环境">
+                Windows配置JNI开发环境 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="zachaxy">
+            
+              <p class="site-author-name" itemprop="name">zachaxy</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zachaxy" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://weibo.com/3242765540" target="_blank" title="Weibo">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#方法的调用机制"><span class="nav-number">1.</span> <span class="nav-text">方法的调用机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法调用执行流程概述"><span class="nav-number">2.</span> <span class="nav-text">方法调用执行流程概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多态调用的本质。"><span class="nav-number">3.</span> <span class="nav-text">多态调用的本质。</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法的返回"><span class="nav-number">4.</span> <span class="nav-text">方法的返回</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zachaxy</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点文章字数总计&#58;</span>
+    
+    <span title="站点文章字数总计">139.7k</span>
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.3"></script>
+
+
+  
+
+
+</body>
+</html>
