@@ -280,6 +280,13 @@ Iterm2 与系统自带的 terminal 类似，但是其功能更为强大；
 
 `⌘ + /` :如果一个标签页中开的窗口太多，有时候会找不到当前的鼠标，找到它。
 
+## 移动光标快捷键修改
+之前的命令单词的移动都是使用 `opt + ->` / `opt +  <-` 来实现的,但是这个要在 iterm2 中进行修改,具体修改方式:
+
+1. 打开iTerm2的Preferences设置
+1. 选择相应的Profile（默认为Default），选择“Keys”选项卡
+1. 在Key Mappings看到`option+←` 和 `option+→`这两组快捷键用作了其他功能，这里我们分别修改为: 选择Action为“Send Escape Sequence”，然后输入“b”和“f”即可
+
 # zsh
 
 终极 shell —— zsh
