@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>curl 使用指南</title>
+      <link href="/2019/09/07/how-to-use-curl/"/>
+      <url>/2019/09/07/how-to-use-curl/</url>
+      
+        <content type="html"><![CDATA[<p>curl是一种命令行工具，作用是发出网络请求，然后得到和提取数据，显示在”标准输出”（stdout）上面。它支持多种协议，下面将介绍 curl 的简单使用</p><a id="more"></a><h1 id="上手"><a href="#上手" class="headerlink" title="上手"></a>上手</h1><pre><code>curl https://github.com/</code></pre><p>curl 后面直接跟一个url，那么将会返回该网站的response。</p><h1 id="查看具体的相应"><a href="#查看具体的相应" class="headerlink" title="查看具体的相应"></a>查看具体的相应</h1><ul><li><code>-i</code> 参数可以显示http response的头信息，连同网页代码一起。</li><li><code>-I</code> 参数则是只显示http response的头信息。</li><li><code>-v</code> 参数可以显示一次http通信的整个过程，包括端口连接和http request头信息。</li></ul><p>如果 <code>-v</code> 参数还不够详细，可以使用 <code>--trace</code> 将相应保存在文件中查看</p><pre><code>curl --trace output.txt https://github.com/curl --trace-ascii output.txt https://github.com/</code></pre><h1 id="添加参数"><a href="#添加参数" class="headerlink" title="添加参数"></a>添加参数</h1><p>上述只是查看一个响应，接下来我们通过添加参数的方式，去构造一个请求，并获取相应。</p><p>curl 默认的 HTTP 方法是 GET，使用<code>-X</code>参数可以支持其他方法。</p><h2 id="GET-请求"><a href="#GET-请求" class="headerlink" title="GET 请求"></a>GET 请求</h2><p>如果要对 GET 请求添加参数只要在 url 后面拼接参数就可以了，这里要注意的是如果参数需要编码，必须显示的指明<br>    curl -G –data-urlencode “key1=value1” –data-urlencode “key2=value2” <a href="https://github.com/" target="_blank" rel="noopener">https://github.com/</a><br>其中 <code>-G</code> 表明将接下来的参数拼接到url 后面， 而 <code>--data-urlencode</code> 表明需要对后面的 k-v 进行编码，每添加一个k-v 对，都需要显示指明编码</p><h2 id="POST-请求"><a href="#POST-请求" class="headerlink" title="POST 请求"></a>POST 请求</h2><p>使用 <code>-X</code> 后面指定方法，</p><pre><code>curl -X POST --data &quot;key1=value1&quot; --data-urlencode &quot;key2=value2&quot; https://github.com/</code></pre><h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>假定文件上传的表单是下面这样：</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">"POST"</span> <span class="attr">enctype</span>=<span class="string">'multipart/form-data'</span> <span class="attr">action</span>=<span class="string">"xxx"</span>&gt;</span></span><br><span class="line">　　　　<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">file</span> <span class="attr">name</span>=<span class="string">upload</span>&gt;</span></span><br><span class="line">　　　　<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">submit</span> <span class="attr">name</span>=<span class="string">press</span> <span class="attr">value</span>=<span class="string">"OK"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure><p>那么文件上传的命令为：</p><pre><code>curl --form upload=@localfilename --form press=OK  https://github.com/</code></pre><h2 id="auth-认证"><a href="#auth-认证" class="headerlink" title="auth 认证"></a>auth 认证</h2><p>有些网域需要HTTP认证，这时curl需要用到<code>-u</code>参数。</p><pre><code>curl -i -u your_username https://api.github.com/users/defunktEnter host password for user your_username:</code></pre><h2 id="添加头信息"><a href="#添加头信息" class="headerlink" title="添加头信息"></a>添加头信息</h2><p>有时需要在http request之中，自行增加一个头信息。<code>-H</code> 或者 <code>--header</code>参数就可以起到这个作用。</p><pre><code>curl -H &quot;Content-Type:application/json&quot; https://github.com/</code></pre><h2 id="添加-User-Agent字段"><a href="#添加-User-Agent字段" class="headerlink" title="添加 User Agent字段"></a>添加 User Agent字段</h2><p>这个字段是用来表示客户端的设备信息。服务器有时会根据这个字段，针对不同设备，返回不同格式的网页，比如手机版和桌面版。</p><p>iPhone4的User Agent是</p><p>　　Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7</p><p>curl可以这样模拟：</p><pre><code>curl --user-agent &quot;your agent&quot; https://github.com/</code></pre><h1 id="more"><a href="#more" class="headerlink" title="more"></a>more</h1><pre><code>curl -help</code></pre><p>一切尽在说明中～</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 工具 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>函数式编程的理解(Java语言)</title>
       <link href="/2019/09/07/introduce-Java8-lambda/"/>
       <url>/2019/09/07/introduce-Java8-lambda/</url>
