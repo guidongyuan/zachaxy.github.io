@@ -336,6 +336,197 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/05/23/Volley源码解析-缓存/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zachaxy">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zachaxy">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/23/Volley源码解析-缓存/" itemprop="url">Volley源码解析-缓存</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-23T14:48:12+08:00">
+                2017-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,343
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Cache-接口"><a href="#Cache-接口" class="headerlink" title="Cache 接口"></a>Cache 接口</h1><p>我们再来回顾一下一个 Request 被添加到 RequestQueue 后，首先是被添加到 mCacheQueue 中，而不是添加到 mNetworkQueue，因为这个请求可能之前执行过，先看一下缓存中有没有，如果没有或者过期，那么再将该请求从 mCacheQueue 中移除，并添加到 mNetworkQueue。</p>
+<p>那么 Cache 中保存了哪些信息呢？</p>
+<p>代码过多这里就不贴出来了，首先作为缓存，肯定要指定一个缓存文件夹以及其保存的位置，接着每个缓存最好是以键值对的形式存在，使用 HashMap 结构来保存，这样才能快速的通过 key 查找 value，key 对应的是一个 request 的 url，value 对应的是 request 得到的 response；</p>
+<p>接下来，response 中需要保存哪些数据呢？首先肯定要保存响应体中的数据，使用字节数组保存。同时还应该保存这个请求的 Etag，有效时长等和 HTTP 缓存相关的字段，以及其它的响应头信息，这些信息被封装在一个 Entry 的类中，该类是 Cache 接口中的静态内部类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> </span>&#123;</span><br><span class="line">    <span class="comment">/** The data returned from cache. */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">byte</span>[] data;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** ETag for cache coherency. */</span></span><br><span class="line">    <span class="keyword">public</span> String etag;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Date of this response as reported by the server. */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">long</span> serverDate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** TTL for this record. */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">long</span> ttl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Soft TTL for this record. */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">long</span> softTtl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Immutable response headers as received from server; must be non-null. */</span></span><br><span class="line">    <span class="keyword">public</span> Map&lt;String, String&gt; responseHeaders = Collections.emptyMap();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** True if the entry is expired. */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isExpired</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.ttl &lt; System.currentTimeMillis();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** True if a refresh is needed from the original data source. */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">refreshNeeded</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.softTtl &lt; System.currentTimeMillis();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="DiskBasedCache"><a href="#DiskBasedCache" class="headerlink" title="DiskBasedCache"></a>DiskBasedCache</h2><p>前面讲了 Cache 的整体实现思路，接下来设计到具体如何读写缓存，这就用到了 Cache 的实现类 DiskBasedCache</p>
+<p>这里只列出方法名和内部实现流程，就不一行一行的写了，因为太多了！！！</p>
+<ul>
+<li><p><code>private final Map&lt;String, CacheHeader&gt; mEntries = new LinkedHashMap&lt;String, CacheHeader&gt;(16, .75f, true)</code>是整个缓存的 map</p>
+</li>
+<li><p><code>CacheHeader</code>是map 中保存的 value，DiskBasedCache 中的静态内部类，是缓存文件中内容的一个概述，不包含 Cache 中 Entry 类中的 data 数据，因为这是要读取到内存中的，如果带上响应体数据，那么会占用很大一部分内存。</p>
+<p> Cache.Entry 和 DiskBasedCache.CacheHeader 之间的关系：<strong>Entry = CacheHeader + byte[] data</strong></p>
+<ul>
+<li><p><code>writeHeader(OutputStream os)</code>:直接看其是如何将 CacheHeader 写到到文件中的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">writeHeader</span><span class="params">(OutputStream os)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		writeInt(os, CACHE_MAGIC);</span><br><span class="line">		writeString(os, key);</span><br><span class="line">		writeString(os, etag == <span class="keyword">null</span> ? <span class="string">""</span> : etag);</span><br><span class="line">		writeLong(os, serverDate);</span><br><span class="line">		writeLong(os, ttl);</span><br><span class="line">		writeLong(os, softTtl);</span><br><span class="line">		writeStringStringMap(responseHeaders, os);</span><br><span class="line">		os.flush();</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">		VolleyLog.d(<span class="string">"%s"</span>, e.toString());</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>readHeader(InputStream is)</code>和上面的 write 方法是相反的，怎么写的怎么读</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CacheHeader <span class="title">readHeader</span><span class="params">(InputStream is)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">	CacheHeader entry = <span class="keyword">new</span> CacheHeader();</span><br><span class="line">	<span class="keyword">int</span> magic = readInt(is);</span><br><span class="line">	<span class="keyword">if</span> (magic != CACHE_MAGIC) &#123;</span><br><span class="line">		<span class="comment">// don't bother deleting, it'll get pruned eventually</span></span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IOException();</span><br><span class="line">	&#125;</span><br><span class="line">	entry.key = readString(is);</span><br><span class="line">	entry.etag = readString(is);</span><br><span class="line">	<span class="keyword">if</span> (entry.etag.equals(<span class="string">""</span>)) &#123;</span><br><span class="line">		entry.etag = <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	entry.serverDate = readLong(is);</span><br><span class="line">	entry.ttl = readLong(is);</span><br><span class="line">	entry.softTtl = readLong(is);</span><br><span class="line">	entry.responseHeaders = readStringStringMap(is);</span><br><span class="line">	<span class="keyword">return</span> entry;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有一个很有意思的<strong>写缓存文件的技巧</strong>，因为这里涉及到了写 int，long，String，那么如何去写呢？ 方法是：如果你写的是 int，那么就用 4 字节来表示，如果是 long，那么就用 8 字节来表示，这样在读的时候，只要是读 int，那么直接向后读 4 个字节，然后拼装成 int 即可；至于字符串，统一将其转换成 UTF8 格式的字节数据，并得到数组长度，首先写入 long 类型的长度，然后再将字节数组写入，在读取的时候先读取 8 字节的 long 值，得到后续字节数组的长度，然后在读取后面相应长度的字节数组，转换为字符串即可。</p>
+</li>
+</ul>
+</li>
+<li><p><code>public synchronized void initialize()</code>初始化上面的 map，遍历缓存文件夹，读取每个缓存文件，然后不断的调用 CacheHeader 的 readHeader 方法读取 CacheHeader，并添加到 map 中</p>
+</li>
+<li><p><code>public synchronized void put(String key, Entry entry)</code>首先调用 CacheHeader 的 writeHeader 方法将数据写入缓存文件，在将 data 数据额外写入缓存文件；同时将该 entry 对应的 entryHeader 添加到 map 中；</p>
+</li>
+<li><p><code>public synchronized Entry get(String key)</code>先从 map 中通过 key 得到 CacheHeader，在根据 key 得到缓存文件名（将 key 的字符串均分为前后两部分，前半部分的 hashCode 和后半部分的 hashCode 拼接起来），然后读取缓存文件中的 data 数据，和 CacheHeader 组合起来得到 Entry。</p>
+</li>
+<li><p><code>public synchronized void remove(String key)</code>先从 map 中删除掉 key 对应的数据，然后删除缓存文件中对应的文件</p>
+</li>
+<li><p><code>public synchronized void clear()</code>：清空缓存，可以在应用的设置中提供这一项。有一个对应的 ClearCacheRequest，专门负责清空缓存。</p>
+</li>
+</ul>
+<h1 id="CacheDispatcher-线程"><a href="#CacheDispatcher-线程" class="headerlink" title="CacheDispatcher 线程"></a>CacheDispatcher 线程</h1><h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><p>CacheDispatcher 线程是会不断的执行读缓存的操作，如果能读到缓存，那么将数据用 ResponseDelivery 发送到 UI 线程，否则将 request 提交给 NetworkDispatcher 来处理。</p>
+<p>首先看其构造方法，传入了在 RequestQueue 中创建的 mCacheQueue, mNetworkQueue, mCache, mDelivery 四个变量。注意这个 mCache 是在 RequestQueue 的构造方法中传入的第一个参数 Cache。也就是说 CacheDispatcher 内部只有这几个成员变量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">CacheDispatcher</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        BlockingQueue&lt;Request&gt; cacheQueue, BlockingQueue&lt;Request&gt; networkQueue,</span></span></span><br><span class="line"><span class="function"><span class="params">        Cache cache, ResponseDelivery delivery)</span> </span>&#123;</span><br><span class="line">    mCacheQueue = cacheQueue;</span><br><span class="line">    mNetworkQueue = networkQueue;</span><br><span class="line">    mCache = cache;</span><br><span class="line">    mDelivery = delivery;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="run-方法"><a href="#run-方法" class="headerlink" title="run 方法"></a>run 方法</h2><p>接下来看一下其 run 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (DEBUG) VolleyLog.v(<span class="string">"start new dispatcher"</span>);</span><br><span class="line">    Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Make a blocking call to initialize the cache.</span></span><br><span class="line">    mCache.initialize();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// Get a request from the cache triage queue, blocking until</span></span><br><span class="line">            <span class="comment">// at least one is available.</span></span><br><span class="line">            <span class="keyword">final</span> Request request = mCacheQueue.take();</span><br><span class="line">            request.addMarker(<span class="string">"cache-queue-take"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// If the request has been canceled, don't bother dispatching it.</span></span><br><span class="line">            <span class="keyword">if</span> (request.isCanceled()) &#123;</span><br><span class="line">                request.finish(<span class="string">"cache-discard-canceled"</span>);</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Attempt to retrieve this item from cache.</span></span><br><span class="line">            Cache.Entry entry = mCache.get(request.getCacheKey());</span><br><span class="line">            <span class="keyword">if</span> (entry == <span class="keyword">null</span>) &#123;</span><br><span class="line">                request.addMarker(<span class="string">"cache-miss"</span>);</span><br><span class="line">                <span class="comment">// Cache miss; send off to the network dispatcher.</span></span><br><span class="line">                mNetworkQueue.put(request);</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// If it is completely expired, just send it to the network.</span></span><br><span class="line">            <span class="keyword">if</span> (entry.isExpired()) &#123;</span><br><span class="line">                request.addMarker(<span class="string">"cache-hit-expired"</span>);</span><br><span class="line">                request.setCacheEntry(entry);</span><br><span class="line">                mNetworkQueue.put(request);</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// We have a cache hit; parse its data for delivery back to the request.</span></span><br><span class="line">            request.addMarker(<span class="string">"cache-hit"</span>);</span><br><span class="line">            Response&lt;?&gt; response = request.parseNetworkResponse(</span><br><span class="line">                    <span class="keyword">new</span> NetworkResponse(entry.data, entry.responseHeaders));</span><br><span class="line">            request.addMarker(<span class="string">"cache-hit-parsed"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!entry.refreshNeeded()) &#123;</span><br><span class="line">                <span class="comment">// Completely unexpired cache hit. Just deliver the response.</span></span><br><span class="line">                mDelivery.postResponse(request, response);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// Soft-expired cache hit. We can deliver the cached response,</span></span><br><span class="line">                <span class="comment">// but we need to also send the request to the network for</span></span><br><span class="line">                <span class="comment">// refreshing.</span></span><br><span class="line">                request.addMarker(<span class="string">"cache-hit-refresh-needed"</span>);</span><br><span class="line">                request.setCacheEntry(entry);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Mark the response as intermediate.</span></span><br><span class="line">                response.intermediate = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Post the intermediate response back to the user and have</span></span><br><span class="line">                <span class="comment">// the delivery then forward the request along to the network.</span></span><br><span class="line">                mDelivery.postResponse(request, response, <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            mNetworkQueue.put(request);</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                            <span class="comment">// Not much we can do about this.</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            <span class="comment">// We may have been interrupted because it was time to quit.</span></span><br><span class="line">            <span class="keyword">if</span> (mQuit) &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第 4 行，设置当前线程的优先级为：Process.THREAD_PRIORITY_BACKGROUND，标准后台线程，相对来说优先级还是比较低的。</p>
+<p>第 7 行，因为这里是 Cache，需要先进行一些初始化，这里调用了 Cache 的 initialize 方法，内部逻辑在上面已经说过了。</p>
+<p>第 9 行，死循环，表明该线程不一直不断的从 mCacheQueue 中取 request</p>
+<p>第 13 行，从 BlockingQueue 中取出一个 request，如果没有的话，就会被阻塞，也不会占用系统资源，赞。</p>
+<p>第 17 行，如果该请求在执行之前，又被其他线程调用了 cancle 方法，那么就取消该 request 的执行。</p>
+<p>第 23 行，从缓存中查看是否有该 request 的缓存，如果不存在，表明是一个新的请求，那么直接将该请求添加到 mNetworkQueue 中，下面的逻辑不用执行，重新从 BlockingQueue 中取 request</p>
+<p>第 32 行，能走到这一行，表明缓存不为空，判断该缓存是否已经过期，这里判断的标准是：<code>this.ttl &lt; System.currentTimeMillis();</code>现在 HTTP1.1 的版本里面保存的都是存活时间，而不是绝对时间，但是考虑到我们的客户端可能会退出，所以无法用时间段来统计，这里还是转换成相对于客户端的绝对时间，再和当前时间进行比较。如果缓存过期了，那么需要将该 request 添加到 mNetworkQueue 中重新进行网络请求，但是在此之前，还要把缓存中的一些信息(“If-None-Match”&lt;=&gt;”etag”，”If-Modified-Since”&lt;=&gt;”serverDate”)附加到 request 中</p>
+<p>第 41 行，能走到这一步，说明我们的缓存命中并且是可用的，此时需要把缓存中的数据读取出来，包装成 Response</p>
+<p><code>Response&lt;?&gt; response = request.parseNetworkResponse(new NetworkResponse(entry.data, entry.responseHeaders));</code></p>
+<p>第 45 行，虽然现在缓存已被转换为 Response，但是还要进行一步新鲜度验证，但是这一步新鲜度验证时多余的，因为 Entry 中的 softTtl 和 ttl 的值是相同的，而前面已经验证了是否过期，所以这一步是多余的，直接使用 ResponseDelivery 分发响应，关于响应的分发，请参阅<a href>Volley 源码解析-线程切换</a></p>
+<p>如果不是新鲜的，那么首先将该 response 分发到 UI 线程显示，同时立即执行网络请求，获取最新的响应。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/05/22/Volley源码解析-请求队列/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1057,348 +1248,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/05/13/手写JVM系列-9-指令集/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zachaxy">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zachaxy">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/05/13/手写JVM系列-9-指令集/" itemprop="url">手写JVM系列(9)-指令集</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-13T23:03:42+08:00">
-                2017-05-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  3,199
-                </span>
-              
-
-              
-
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>编译之后的 Java 方法以字节码的形式存储在 class 文件中。前面已经初步实现了 Java 虚拟机栈、帧、操作数栈和局部变量表等运行时数据区。那么 JVM 是如何操作局部变量表和操作数栈中的数据呢？这就涉及到了 JVM 的字节码指令集。这一节对 JVM 的字节码指令集做一个介绍，本节所实现的指令位于<a href="https://github.com/zachaxy/JVM" target="_blank" rel="noopener">项目</a>的 instructions 包下。</p>
-</blockquote>
-<h1 id="字节码简介"><a href="#字节码简介" class="headerlink" title="字节码简介"></a>字节码简介</h1><p>字节码是运行在虚拟机上的机器码,每一个类或者接口都会被 Java 编译器编译成一个 class 文件，类或接口的方法信息就放在 class 文件的 method_info 结构中。如果方法不是抽象的，也不是本地方法，方法的 Java 代码就会被编译器编译成字节码（即使方法是空的，编译器也会生成一条 return 语句），存放在 method_info 结构的<strong>Code 属性</strong>中。 ==&gt; 字节码一般来说是针对方法中的步骤的；</p>
-<h1 id="指令简介"><a href="#指令简介" class="headerlink" title="指令简介"></a>指令简介</h1><p>字节码中存放编码后的 Java 虚拟机指令。</p>
-<p><strong>指令 = 操作码 + 操作数（如果有的话）</strong></p>
-<ul>
-<li>操作码（Opcode）：一个字节长度，代表着某种特定操作含义。</li>
-<li>操作数（Operands）：操作码后面需要跟零到多个代表该操作码所需的参数。</li>
-</ul>
-<p>所以 Java 虚拟机使用的是<strong>变长指令</strong></p>
-<p>如果把指令想象成函数的话，操作数就是它的参数。每条指令都以一个单字节的操作码（opcode）开头。由于只使用一字节表示操作码，显而易见，Java 虚拟机最多只能支持 256（2^8 ）条指令。</p>
-<p>Java 虚拟机规范已经定义了 205 条指令，操作码分别是 0（0x00）到 202（0xCA）、254（0xFE）和 255（0xFF）。这 205 条指令构成了 Java 虚拟机的指令集（instruction set）。</p>
-<p>字节码指令是一种具有鲜明特点，优劣势都很突出的指令集架构。</p>
-<p>缺点：由于 Class 文件格式放弃了将编译后操作数长度对齐，那么如果处理那些超过一个字节的数据时，不得不在运行时从字节中重建出具体数据，eg：将一个 16 位无符号整数用两字节（byte1，byte2）存储起来，那么在读取该 16 位整数时，需要这样转换：<code>( byte1 &lt;&lt; 8 ) | byte2</code>，这导致解释执行操作码时损失了一些性能。</p>
-<p>优点：放弃了操作数长度对其，意味着可以省略很多填充和间隔符号，尽可能获取短小精干的编译代码（小数据量，高效传输）</p>
-<h1 id="操作码的数据类型"><a href="#操作码的数据类型" class="headerlink" title="操作码的数据类型"></a>操作码的数据类型</h1><p>为了让编码后的字节码更加紧凑，很多操作码本身就隐含了操作数，比如把常数 0 推入操作数栈的指令是 iconst_0。</p>
-<p><strong>操作数栈</strong>和<strong>局部变量表</strong>只存放数据的值，并不记录数据类型。结果就是：<strong>指令必须知道自己在操作什么类型的数据。</strong>这一点也直接反映在了操作码的助记符上。</p>
-<p>例如：</p>
-<p>iadd 指令就是对 int 值进行加法操作；</p>
-<p>dstore 指令把操作数栈顶的 double 值弹出，存储到局部变量表中；</p>
-<p>areturn 从方法中返回引用值。</p>
-<p>也就是说，如果某类指令可以操作不同类型的变量，则助记符的<strong>第一个字母表示变量类型</strong>。</p>
-<table>
-<thead>
-<tr>
-<th>助记符首字母</th>
-<th>数据类型</th>
-<th>例子</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>a</td>
-<td>reference</td>
-<td>aload、astore、areturn</td>
-</tr>
-<tr>
-<td>b</td>
-<td>byte/boolean</td>
-<td>bipush、baload</td>
-</tr>
-<tr>
-<td>c</td>
-<td>char</td>
-<td>caload、castore</td>
-</tr>
-<tr>
-<td>d</td>
-<td>double</td>
-<td>dload、dstore、dadd</td>
-</tr>
-<tr>
-<td>f</td>
-<td>float</td>
-<td>fload、fstore、fadd</td>
-</tr>
-<tr>
-<td>i</td>
-<td>int</td>
-<td>iload、istore、iadd</td>
-</tr>
-<tr>
-<td>l</td>
-<td>long</td>
-<td>lload、lstore、ladd</td>
-</tr>
-<tr>
-<td>s</td>
-<td>short</td>
-<td>sipush、sastore</td>
-</tr>
-</tbody></table>
-<p>并非每个基本数据类型都有对应的操作码，从上图可以看到大部指令都没有直接支持 byte、char、short、boolean，编译器会在编译器或者运行期将 byte 和 short 类型的数据<strong>带符号扩展</strong>为相应的 int 类型，将 boolean 和 char 类型数据<strong>零位扩展</strong>为相应的 int 类型。因此，大多数对于 byte、char、short、boolean 的操作，实际上都是使用相应的 int 类型作为运算类型。</p>
-<h1 id="指令的分类"><a href="#指令的分类" class="headerlink" title="指令的分类"></a>指令的分类</h1><p>因为使用一字节表示操作码，所以 Java 虚拟机最多只能支持 256（2^8 ）条指令。</p>
-<p>Java 虚拟机规范已经定义了 205 条指令，操作码分别是 0（0x00）到 202（0xCA）、254（0xFE）和 255（0xFF）。这 205 条指令构成了 Java 虚拟机的指令集（instruction set）。</p>
-<p>Java 虚拟机规范把已经定义的 205 条指令按用途分成了 11 类：</p>
-<ol>
-<li>常量（constants）指令</li>
-<li>加载（loads）指令</li>
-<li>存储（stores）指令</li>
-<li>操作数栈（stack）指令</li>
-<li>数学（math）指令</li>
-<li>转换（conversions）指令</li>
-<li>比较（comparisons）指令</li>
-<li>控制（control）指令</li>
-<li>引用（references）指令</li>
-<li>扩展（extended）指令</li>
-<li>保留（reserved）指令</li>
-</ol>
-<p>注:保留指令共有 3 条。其中一条是留给调试器的，用于实现断点，操作码是<code>202（0xCA）</code>，助记符是<code>breakpoint</code>。另外两条留给<code>Java</code>虚拟机实现内使用，操作码分别是<code>254（0xFE）</code>和<code>266（0xFF）</code>，助记符是<code>impdep1</code>和<code>impdep2</code>。这三条指令不允许出现在 class 文件中。</p>
-<p>接下来这上述的 11 类指令做一个简单的介绍，并在每种类别的指令中跳出几个有代表性的进行简要说明。</p>
-<h1 id="常量指令"><a href="#常量指令" class="headerlink" title="常量指令"></a>常量指令</h1><p>常量指令把常量<strong>推入操作数栈顶</strong>。常量可以来自三个地方：隐含在操作码里、操作数和运行时常量池。</p>
-<h2 id="nop-指令"><a href="#nop-指令" class="headerlink" title="nop 指令"></a>nop 指令</h2><p>nop 指令是最简单的一条指令，因为它什么也不做。</p>
-<h2 id="const-系列指令"><a href="#const-系列指令" class="headerlink" title="const 系列指令"></a>const 系列指令</h2><p>这一系列指令把隐含在操作码中的常量值<strong>推入操作数栈顶</strong>。几个具体的例子如下：</p>
-<ul>
-<li><p>aconst_null 指令把 null 引用推入操作数栈顶</p>
-</li>
-<li><p>dconst_0 指令把 double 型 0 推入操作数栈顶</p>
-</li>
-<li><p>iconst_m1 指令把 int 型 -1 推入操作数栈顶</p>
-<p>​</p>
-</li>
-</ul>
-<h2 id="bipush-和-sipush-指令"><a href="#bipush-和-sipush-指令" class="headerlink" title="bipush 和 sipush 指令"></a>bipush 和 sipush 指令</h2><p>bipush 指令从<strong>操作数</strong>中获取一个 byte 型整数，扩展成 int 型，然后<strong>推入栈顶</strong>。</p>
-<p>sipush 指令从<strong>操作数</strong>中获取一个 short 型整数，扩展成 int 型，然后<strong>推入栈顶</strong>。</p>
-<h1 id="加载指令"><a href="#加载指令" class="headerlink" title="加载指令"></a>加载指令</h1><p>加载指令从局部变量表获取变量，然后推入操作数栈顶。加载指令共 33 条，按照所操作变量的类型可以分为 6 类:</p>
-<ol>
-<li>aload 系列指令操作引用类型变量</li>
-<li>dload 系列操作 double 类型变量</li>
-<li>fload 系列操作 float 变量</li>
-<li>iload 系列操作 int 变量</li>
-<li>lload 系列操作 long 变量</li>
-<li>xaload 操作数组</li>
-</ol>
-<h1 id="存储指令"><a href="#存储指令" class="headerlink" title="存储指令"></a>存储指令</h1><p>和加载指令刚好相反，存储指令把变量从操作数栈顶弹出，然后存入局部变量表。</p>
-<h1 id="栈指令"><a href="#栈指令" class="headerlink" title="栈指令"></a>栈指令</h1><p>直接对<strong>操作数栈</strong>进行操作，栈指令并不关心变量类型（但是可以确定不是 long 和 double，因为这两种类型占用两个 Slot，所以这里虽然不管类型，但是可以确定是占用了一个 Slot）。共 9 条：</p>
-<ul>
-<li>pop 和 pop2 指令将栈顶变量弹出</li>
-<li>dup 系列指令复制栈顶变量</li>
-<li>swap 指令交换栈顶的两个变量</li>
-</ul>
-<h1 id="数学指令"><a href="#数学指令" class="headerlink" title="数学指令"></a>数学指令</h1><p>数学指令大致对应 Java 语言中的加、减、乘、除等数学运算符。</p>
-<p>数学指令共 37 条，包括：</p>
-<ul>
-<li>算术指令</li>
-<li>位移指令</li>
-<li>布尔运算指令</li>
-<li>自增指令(eg:i++)</li>
-</ul>
-<h2 id="算术指令"><a href="#算术指令" class="headerlink" title="算术指令"></a>算术指令</h2><ol>
-<li>加法（add）指令</li>
-<li>减法（sub）指令</li>
-<li>乘法（mul）指令</li>
-<li>除法（div）指令</li>
-<li>求余（rem）指令</li>
-<li>取反（neg）指令</li>
-</ol>
-<h2 id="位移指令"><a href="#位移指令" class="headerlink" title="位移指令"></a>位移指令</h2><ol>
-<li><p>左移</p>
-</li>
-<li><p>右移</p>
-<ol>
-<li>算术右移（有符号右移）</li>
-<li>逻辑右移（无符号右移）</li>
-</ol>
-<p>​</p>
-</li>
-</ol>
-<h2 id="布尔运算指令"><a href="#布尔运算指令" class="headerlink" title="布尔运算指令"></a>布尔运算指令</h2><p>布尔运算指令只能操作 int 和 long 变量：</p>
-<ol>
-<li>按位与（and）</li>
-<li>按位或（or）</li>
-<li>按位异或（xor）</li>
-</ol>
-<h2 id="iinc-指令"><a href="#iinc-指令" class="headerlink" title="iinc 指令"></a>iinc 指令</h2><p>iinc 指令给局部变量表中的 int 变量增加常量值，局部变量表索引和常量值都由指令的操作数提供。</p>
-<h1 id="类型转换指令"><a href="#类型转换指令" class="headerlink" title="类型转换指令"></a>类型转换指令</h1><p>类型转换指令可以分为 4 种：</p>
-<ul>
-<li>i2x 系列指令把 int 变量强制转换成其他类型</li>
-<li>l2x 系列指令把 long 变量强制转换成其他类型</li>
-<li>f2x 系列指令把 float 变量强制转换成其他型</li>
-<li>d2x 系列指令把 double 变量强制转换成其他类型</li>
-</ul>
-<p>注意:引用类型转换对应的是 checkcast 指令,在后面的章节会出现。</p>
-<h1 id="比较指令"><a href="#比较指令" class="headerlink" title="比较指令"></a>比较指令</h1><p>比较指令可以分为两类：</p>
-<ul>
-<li>将比较结果推入操作数栈顶。</li>
-<li>根据比较结果跳转。</li>
-</ul>
-<h2 id="lcmp-指令"><a href="#lcmp-指令" class="headerlink" title="lcmp 指令"></a>lcmp 指令</h2><p>用于比较 long 变量,把栈顶的两个 long 变量弹出，进行比较，然后把比较结果（int 型 0、1 或 -1）推入栈顶。</p>
-<h2 id="fcmp-指令"><a href="#fcmp-指令" class="headerlink" title="fcmp 指令"></a>fcmp 指令</h2><p>指令和 lcmp 指令很像，但是除了比较的变量类型不同以外，还有一个重要的区别:由于浮点数计算有可能产生 NaN（Not a Number）值，所以比较两个浮点数时，除了大于、等于、小于之外， 还有第 4 种结果：<strong>无法比较</strong></p>
-<p>fcmpg 和 fcmpl 指令的区别就在于对第 4 种结果的定义;<br>当两个 float 变量中至少有一个是 NaN 时，用 fcmpg 指令比较的结果是 1，而用 fcmpl 指令比较的结果是 -1。</p>
-<h2 id="dcmp-指令"><a href="#dcmp-指令" class="headerlink" title="dcmp 指令"></a>dcmp 指令</h2><p>dcmpg 和 dcmpl 指令用来比较 double 变量,这条指令和 fcmp 指令只是比较的变量类型不同。</p>
-<h2 id="if-lt-cond-gt-指令"><a href="#if-lt-cond-gt-指令" class="headerlink" title="if&lt;cond&gt;指令"></a><code>if&lt;cond&gt;</code>指令</h2><p><code>if&lt;cond&gt;</code>指令把操作数栈顶的 int 变量弹出，然后跟 0 进行比较，满足条件则跳转。假设从栈顶弹出的变量是 x，则指令执行跳转操作的条件如下：具体判定之后如何跳转,现在先不讨论;</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ifeq：x==0</span><br><span class="line">ifne：x！=0</span><br><span class="line">iflt：x&lt;0</span><br><span class="line">ifle：x&lt;=0</span><br><span class="line">ifgt：x&gt;0</span><br><span class="line">ifge：x&gt;=0</span><br></pre></td></tr></table></figure>
-
-<h2 id="if-icmp-lt-cond-gt-指令"><a href="#if-icmp-lt-cond-gt-指令" class="headerlink" title="if_icmp&lt;cond&gt;指令"></a><code>if_icmp&lt;cond&gt;指令</code></h2><p><code>if_icmp&lt;cond&gt;</code>指令把栈顶的两个 int 变量弹出，然后进行比较，满足条件则跳转。跳转条件和 if<cond>指令类似。</cond></p>
-<h2 id="if-acmp-lt-cond-gt-指令"><a href="#if-acmp-lt-cond-gt-指令" class="headerlink" title="if_acmp&lt;cond&gt;指令"></a><code>if_acmp&lt;cond&gt;指令</code></h2><p>把栈顶的两个引用弹出，根据引用是否相同进行跳转。</p>
-<h1 id="控制指令"><a href="#控制指令" class="headerlink" title="控制指令"></a>控制指令</h1><p>分类:</p>
-<ul>
-<li>goto</li>
-</ul>
-<ul>
-<li>tableswitch</li>
-</ul>
-<ul>
-<li>lookupswitch</li>
-</ul>
-<h2 id="goto"><a href="#goto" class="headerlink" title="goto"></a>goto</h2><p>goto 指令进行无条件跳转,其操作码后是一个 int16 类型的操作数，所以需要读两个字节并转成成 int16 类型，该操作数即偏移 offset，那么接下来要执行的指令的位置为：<code>pc + offset</code></p>
-<h2 id="tableswitch"><a href="#tableswitch" class="headerlink" title="tableswitch"></a>tableswitch</h2><p>Java 语言中的 switch-case 语句有两种实现方式：如果 case 值可以编码成一个索引表(索引值是连续的)，则实现成 tableswitch 指令；否则实现成 lookupswitch 指令</p>
-<p>下面这个 Java 方法中的 switch-case 可以编译成 tableswitch 指令，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">chooseNear</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line"><span class="keyword">switch</span> (i) &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">0</span>: <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">1</span>: <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">2</span>: <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">default</span>: <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>tableswitch 后跟的操作数是对应 case 分支的跳转 offset，其格式类似于：</p>
-<p>default 分支对应的跳转 defaultOffset，0 分支对应的索引 low(这里就是 0)，2 分支对应的索引 high(这里就是 2)，因为 0<del>2 分支对应的跳转是连续的，所以接下来分别对应 0</del>2 分支的跳转 offset。</p>
-<p>这里用一个数组存放最合适不过了，数组大小就是<code>high-low+1</code>，这里拿到一个分支跳转的 case 的索引 index，先判断 index 在不在 low 和 high 之间，如果不在，其 offset 就是 defaultOffset，否则就用从数组中找 <code>arr[index-low]</code>，拿到对应的 offset。</p>
-<h2 id="lookupswitch"><a href="#lookupswitch" class="headerlink" title="lookupswitch"></a>lookupswitch</h2><p>(索引值是非连续的)下面这个 Java 方法中的 switch-case 则需要编译成 lookupswitch 指令：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">chooseFar</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (i) &#123;</span><br><span class="line">  <span class="keyword">case</span> -<span class="number">100</span>: <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">0</span>: <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">100</span>: <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">default</span>: <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>因为这里的 case 语句并不是连续的，所以不能用数组来表示了，只能是一个 case 的索引，接下来该 case 对应的跳转。</p>
-<h1 id="扩展指令"><a href="#扩展指令" class="headerlink" title="扩展指令"></a>扩展指令</h1><h2 id="wide-指令"><a href="#wide-指令" class="headerlink" title="wide 指令"></a>wide 指令</h2><p>加载类指令、存储类指令、ret 指令和 iinc 指令需要按索引访问局部变量表，索引以 uint8 的形式存在字节码中。对于大部分方法来说，<strong>局部变量表大小一般都不会超过 256</strong>，所以用一字节来表示索引就够了。</p>
-<p>但是如果有方法的局部变量表超过这限制时,Java 虚拟机规范定义了 wide 指令来扩展前述指令。</p>
-<p>wide 指令改变其他指令的行为，modifiedInstruction 字段存放被改变的指令。</p>
-<h2 id="ifnull-ifnonnull-指令"><a href="#ifnull-ifnonnull-指令" class="headerlink" title="ifnull/ifnonnull 指令"></a>ifnull/ifnonnull 指令</h2><p>根据引用是否是 null 进行跳转，ifnull 和 ifnonnull 指令把栈顶的引用弹出。</p>
-<h2 id="goto-w-指令"><a href="#goto-w-指令" class="headerlink" title="goto_w 指令"></a>goto_w 指令</h2><p>goto_w 指令和 goto 指令的唯一区别就是索引从 2 字节变成了 4 字节。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1453,7 +1302,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1533,7 +1382,7 @@
     
       <span class="post-meta-item-text">站点文章字数总计&#58;</span>
     
-    <span title="站点文章字数总计">144.4k</span>
+    <span title="站点文章字数总计">147.0k</span>
   
 </div>
 

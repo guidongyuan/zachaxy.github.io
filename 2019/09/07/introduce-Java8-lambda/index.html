@@ -138,7 +138,7 @@
 <meta property="og:site_name" content="zachaxy">
 <meta property="og:description" content="1234567891011121314151617// 方式1view.setOnClickListener(new View.OnClickListener() &amp;#123;    @Override    public void onClick(View v) &amp;#123;        System.out.println(&quot;I am clicked&quot;);    &amp;#125;&amp;#125;);">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-07T14:23:14.914Z">
+<meta property="og:updated_time" content="2019-09-15T05:04:54.437Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="函数式编程的理解(Java语言)">
 <meta name="twitter:description" content="1234567891011121314151617// 方式1view.setOnClickListener(new View.OnClickListener() &amp;#123;    @Override    public void onClick(View v) &amp;#123;        System.out.println(&quot;I am clicked&quot;);    &amp;#125;&amp;#125;);">
@@ -397,7 +397,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,943
+                  3,941
                 </span>
               
 
@@ -441,7 +441,7 @@
 <hr>
 <p>上述几个概念似乎没有什么关联,那么我们再次回到文章开头给出的三种实现方式. 第一种方式是最常见的一种方式,view 的 setOnClickListener 方法要传入一个接口, 我们一般都是直接在参数传入的地方,传入一个匿名内部类,但是这样使得代码的整体结构变得略微有些复杂,并且不够直观,那么有没有一种更简洁的写法呢? 于是 Java8 便退出了更为简洁的lambda 表达式,一行代码就可以替代之前臃肿的结构.</p>
 <p>但是,并非所有参数是接口的方法,都可以用 lambda 表达式来替代,这个接口有一个特殊的限定—有且仅包含一个抽象方法的接口(函数式接口). Java8 并没有在之前的基础上提供额外的语法来创建函数式接口,而是在原有接口的范畴内,进行限定.这样就可以在参数为函数式接口的方法中,使用 lambda 来表达.</p>
-<p>透过开篇的示例代码,我们发现 setOnClickListener 方法要传入一个接口,本质上是在view 接受到点击事件后,要往外抛出一个事件,而接口真是 view 内部点击事件与外部处理点击事件的桥梁,实际上,就是需要一个特定的代码块来处理点击事件,所以lambda表达式就产生了,但是如果我们再进一步分析,似乎我们并没有必要特意去强调实现了该接口,才可以接受回调,只要满足其接口内的方法签名,任意一个方法都可以传入用来处理对应的回调,甚至都不需要满足函数式接口的约束,这就是方法引用产生的背景.</p>
+<p>透过开篇的示例代码,我们发现 setOnClickListener 方法要传入一个接口,本质上是在view 接受到点击事件后,要往外抛出一个事件,而接口正是 view 内部点击事件与外部处理点击事件的桥梁,实际上,就是需要一个特定的代码块来处理点击事件,所以lambda表达式就产生了,但是如果我们再进一步分析,似乎我们并没有必要特意去强调实现了该接口,才可以接受回调,只要满足其接口内的方法签名,任意一个方法都可以传入用来处理对应的回调,甚至都不需要满足函数式接口的约束,这就是方法引用产生的背景.</p>
 <p>方法引用提供了非常有用的语法，可以直接引用已有Java类或对象（实例）的方法或构造器。与lambda联合使用，方法引用可以使语言的构造更紧凑简洁，减少冗余代码。</p>
 <h1 id="Lambda-简介"><a href="#Lambda-简介" class="headerlink" title="Lambda 简介"></a>Lambda 简介</h1><p>Lambda 表达式，也可称为闭包,其替代的是函数式接口被当做参数传入方法是的一种场景.</p>
 <p>Lambda 表达式的语法格式如下(两种方式):</p>
@@ -579,7 +579,7 @@
 <blockquote>
 <p>Lambda的并行流虽好，但也要注意使用场景。如果平常的业务处理比如过滤，提取数据，没有涉及特别大的数据和耗时操作，则不需要开启并行流。如果一个只有几十个元素的列表的过滤操作也开启了并行流，其实这样做会更慢。因为多行线程的开启和同步这些花费的时间往往比你真实的处理时间要多很多。但一些耗时的操作比如I/O访问，DB查询，远程调用，这些如果可以并行的话，则开启并行流是可提升很大性能的。因为并行流的底层原理是fork/join，如果你的数据分块不是很好切分，也不建议开启并行流。举个例子ArrayList的Stream可以开启并行流，而LinkedList则不建议，因为LinkedList每次做数据切分要遍历整个链表，这本身就已经很浪费性能，而ArrayList则不会</p>
 </blockquote>
-<h1 id="参考拦截"><a href="#参考拦截" class="headerlink" title="参考拦截"></a>参考拦截</h1><ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://www.cnblogs.com/linlinismine/p/9283532.html" target="_blank" rel="noopener">聊聊Java 8 Lambda 表达式</a></li>
 <li><a href="http://www.ruanyifeng.com/blog/2017/02/fp-tutorial.html" target="_blank" rel="noopener">函数式编程入门教程</a></li>
 <li><a href="https://segmentfault.com/a/1190000012269548" target="_blank" rel="noopener">Java8-8-方法引用详解</a></li>
@@ -725,7 +725,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -787,7 +787,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#几个基本的概念"><span class="nav-number">1.</span> <span class="nav-text">几个基本的概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lambda-简介"><span class="nav-number">2.</span> <span class="nav-text">Lambda 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#函数式编程的核心思想"><span class="nav-number">3.</span> <span class="nav-text">函数式编程的核心思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#best-practice"><span class="nav-number">4.</span> <span class="nav-text">best practice</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考拦截"><span class="nav-number">5.</span> <span class="nav-text">参考拦截</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#几个基本的概念"><span class="nav-number">1.</span> <span class="nav-text">几个基本的概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lambda-简介"><span class="nav-number">2.</span> <span class="nav-text">Lambda 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#函数式编程的核心思想"><span class="nav-number">3.</span> <span class="nav-text">函数式编程的核心思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#best-practice"><span class="nav-number">4.</span> <span class="nav-text">best practice</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
@@ -821,7 +821,7 @@
     
       <span class="post-meta-item-text">站点文章字数总计&#58;</span>
     
-    <span title="站点文章字数总计">144.4k</span>
+    <span title="站点文章字数总计">147.0k</span>
   
 </div>
 
