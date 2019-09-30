@@ -336,6 +336,159 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/04/10/广度优先算法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zachaxy">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zachaxy">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/04/10/广度优先算法/" itemprop="url">广度优先算法</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-10T19:05:21+08:00">
+                2017-04-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,024
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>BFS（Breadth First Search）广度优先遍历，从图的某一结点出发，首先依次访问该结点的所有邻接顶点 Vi1, Vi2, …, Vin 再按这些顶点被访问的先后次序依次访问与它们相邻接的所有未被访问的顶点，重复此过程，直至所有顶点均被访问为止。</p>
+</blockquote>
+<p>广度优先一般使用队列来完成,不需要使用递归,相对来说比较简单,接下来是一个广度优先算法的一个模板</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 顶点数</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> number = <span class="number">9</span>;</span><br><span class="line"><span class="comment">// 记录顶点是否被访问</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">boolean</span>[] flag;</span><br><span class="line"><span class="comment">// 顶点</span></span><br><span class="line"><span class="keyword">private</span> String[] vertexs = &#123; <span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>, <span class="string">"D"</span>, <span class="string">"E"</span>, <span class="string">"F"</span>, <span class="string">"G"</span>, <span class="string">"H"</span>, <span class="string">"I"</span> &#125;;</span><br><span class="line"><span class="comment">// 边</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span>[][] edges = &#123; </span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span> &#125;, </span><br><span class="line">        &#123; <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span> &#125;, </span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span> &#125;,</span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span> &#125;,</span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span> &#125;, </span><br><span class="line">        &#123; <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span> &#125;,</span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span> &#125;,</span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span> &#125;, </span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> &#125; </span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 图的广度遍历操作</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BFSTraverse</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    flag = <span class="keyword">new</span> <span class="keyword">boolean</span>[number];</span><br><span class="line">    Queue&lt;Integer&gt; queue = <span class="keyword">new</span> LinkedList&lt;Integer&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; number; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (flag[i] == <span class="keyword">false</span>) &#123;</span><br><span class="line">            flag[i] = <span class="keyword">true</span>;</span><br><span class="line">            System.out.print(vertexs[i] + <span class="string">" "</span>);</span><br><span class="line">            queue.add(i);</span><br><span class="line">            <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">                <span class="keyword">int</span> j = queue.poll();</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; number; k++) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (edges[j][k] == <span class="number">1</span> &amp;&amp; flag[k] == <span class="keyword">false</span>) &#123;</span><br><span class="line">                        flag[k] = <span class="keyword">true</span>;</span><br><span class="line">                        System.out.print(vertexs[k] + <span class="string">" "</span>);</span><br><span class="line">                        queue.add(k);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还是用九个顶点的图来作为示例,首先,创建一个标志数组,用来标示该顶点有没有被访问过,接下来,从第一个顶点开始(其实任意一个顶点都可以),将该顶点加入到队列中,接下来开启循环,拿出队列头部的一个节点,如果该队列有邻接的节点,那么将邻接节点添加到队列中,直到有所节点都被访问完为止.</p>
+<blockquote>
+<p>运行结果:</p>
+<p>A-&gt;B-&gt;F-&gt;G-&gt;C-&gt;I-&gt;E-&gt;D-&gt;H</p>
+</blockquote>
+<p>广度优先遍历一个典型的题目就是按照二叉树的层次打印节点的值.</p>
+<p>当然也可以解决最短路径的问题,如果只要求输出最短路径的长度,这个时间复杂度是比深度优先好的,但是如果要把最短的路径打印出来,广度优先就显得无能为力了,还是要用深度优先.还是前一篇文章<a href="https://zachaxy.github.io/2017/04/10/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E7%AE%97%E6%B3%95/">深度优先算法</a>中走迷宫的例子,我们这次使用广广度优先,只输出最短路径的值,不打印具体路径;</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">int</span>[][] arr = &#123;</span><br><span class="line">        &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>&#125;,</span><br><span class="line">        &#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&#125;,</span><br><span class="line">        &#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>&#125;,</span><br><span class="line">        &#123;<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>&#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.i = i;</span><br><span class="line">        <span class="keyword">this</span>.j = j;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> i + <span class="string">"&lt;&gt;"</span> + j;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bfs</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    LinkedList&lt;Pair&gt; queue = <span class="keyword">new</span> LinkedList&lt;Pair&gt;();</span><br><span class="line">    queue.add(<span class="keyword">new</span> Pair(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">int</span> level = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> preCount = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> curCount = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">        <span class="comment">//首先把当前层的全部都拿出来</span></span><br><span class="line">        <span class="keyword">while</span> (preCount-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            Pair pair = queue.poll();</span><br><span class="line">          <span class="comment">//如果走到的右下角,打印层次,结束程序</span></span><br><span class="line">            <span class="keyword">if</span> (pair.i == arr.length - <span class="number">1</span> &amp;&amp; pair.j == arr[<span class="number">0</span>].length - <span class="number">1</span>) &#123;</span><br><span class="line">                System.out.println(level);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//向下</span></span><br><span class="line">            <span class="keyword">if</span> (pair.i + <span class="number">1</span> &lt; arr.length &amp;&amp; !dp[pair.i + <span class="number">1</span>][pair.j] &amp;&amp; arr[pair.i + <span class="number">1</span>][pair.j] == <span class="number">0</span>) &#123;</span><br><span class="line">                dp[pair.i + <span class="number">1</span>][pair.j] = <span class="keyword">true</span>;</span><br><span class="line">                queue.offer(<span class="keyword">new</span> Pair(pair.i + <span class="number">1</span>, pair.j));</span><br><span class="line">                curCount++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//向右</span></span><br><span class="line">            <span class="keyword">if</span> (pair.j + <span class="number">1</span> &lt; arr[<span class="number">0</span>].length &amp;&amp; !dp[pair.i][pair.j + <span class="number">1</span>] &amp;&amp; arr[pair.i][pair.j + <span class="number">1</span>] == <span class="number">0</span>) &#123;</span><br><span class="line">                dp[pair.i][pair.j + <span class="number">1</span>] = <span class="keyword">true</span>;</span><br><span class="line">                queue.offer(<span class="keyword">new</span> Pair(pair.i, pair.j + <span class="number">1</span>));</span><br><span class="line">                curCount++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//向上</span></span><br><span class="line">            <span class="keyword">if</span> (pair.i - <span class="number">1</span> &gt;= <span class="number">0</span> &amp;&amp; !dp[pair.i - <span class="number">1</span>][pair.j] &amp;&amp; arr[pair.i - <span class="number">1</span>][pair.j] == <span class="number">0</span>) &#123;</span><br><span class="line">                dp[pair.i - <span class="number">1</span>][pair.j] = <span class="keyword">true</span>;</span><br><span class="line">                queue.offer(<span class="keyword">new</span> Pair(pair.i - <span class="number">1</span>, pair.j));</span><br><span class="line">                curCount++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//向左</span></span><br><span class="line">            <span class="keyword">if</span> (pair.j - <span class="number">1</span> &gt;= <span class="number">0</span> &amp;&amp; !dp[pair.i][pair.j - <span class="number">1</span>] &amp;&amp; arr[pair.i][pair.j - <span class="number">1</span>] == <span class="number">0</span>) &#123;</span><br><span class="line">                dp[pair.i][pair.j - <span class="number">1</span>] = <span class="keyword">true</span>;</span><br><span class="line">                queue.offer(<span class="keyword">new</span> Pair(pair.i, pair.j - <span class="number">1</span>));</span><br><span class="line">                curCount++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        preCount = curCount;</span><br><span class="line">        curCount = <span class="number">0</span>;</span><br><span class="line">        level++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/04/10/深度优先算法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1085,217 +1238,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/04/03/RxJava源码详解-基本使用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zachaxy">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zachaxy">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/04/03/RxJava源码详解-基本使用/" itemprop="url">RxJava源码详解-基本使用</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-03T09:15:24+08:00">
-                2017-04-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2,876
-                </span>
-              
-
-              
-
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="观察者-VS-被观察者"><a href="#观察者-VS-被观察者" class="headerlink" title="观察者 VS 被观察者"></a>观察者 VS 被观察者</h1><p>以灯泡和开关为例子,这个例子中,开关是被观察者,灯泡是观察者,灯泡观察到开关执行了响应的操作,才执行响应的亮/灭的响应;</p>
-<p>被观察者(Observable):事件的产生源头<br>观察者(Observer):事件的处理方;注册感兴趣的事件,一旦事件发生改变,观察者再做出相应的响应</p>
-<p>在事件的起点到终点的传递过程中,我们可以进行相应的转换/加工/过滤等操作</p>
-<p>在源码中,你可能会看到观察者有时候用Observer,有时候用Subscriber<br>其实:Observer是观察者的接口， Subscriber是实现这个接口的抽象类,<br>因此两个类都可以被当做观察者，由于 Subscriber 在 Observer 的基础上做了一些拓展，加入了新的方法，一般会更加倾向于使用Subscriber。<br><code>abstract class Subscriber&lt;T&gt; implements Observer&lt;T&gt;, Subscription</code></p>
-<h1 id="RxJava-的使用"><a href="#RxJava-的使用" class="headerlink" title="RxJava 的使用"></a>RxJava 的使用</h1><h1 id="创建被观察者"><a href="#创建被观察者" class="headerlink" title="创建被观察者"></a>创建被观察者</h1><p>这里分为三种方法:普通模式,偷懒模式1,偷懒模式2</p>
-<h2 id="普通模式"><a href="#普通模式" class="headerlink" title="普通模式"></a>普通模式</h2><p>这里分为两种方法:普通模式,偷懒模式1;</p>
-<h2 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h2><p>建立观察者和被观察者的联系<br><code>switcher.subscribe(light);</code></p>
-<p>这里可能存在一些疑惑,一般的写法是观察者订阅被观察者,而 RxJava 怎么反过来了<br>是这样的，台灯观察开关，逻辑是没错的，而且正常来看就应该是light.subscribe(switcher)才对，之所以“开关订阅台灯”，是为了保证 <strong>流式API调用风格</strong></p>
-<p>注: <strong>当调用订阅操作即调用Observable.subscribe(Observe)方法的时候，被观察者才真正开始发出事件</strong></p>
-<h3 id="关于流式API调用风格"><a href="#关于流式API调用风格" class="headerlink" title="关于流式API调用风格"></a>关于流式API调用风格</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//这就是RxJava的流式API调用</span><br><span class="line">Observable.just(&quot;On&quot;,&quot;Off&quot;,&quot;On&quot;,&quot;On&quot;)</span><br><span class="line">    //在传递过程中对事件进行过滤操作</span><br><span class="line">     .filter(new Func1&lt;String, Boolean&gt;() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public Boolean call(String s) &#123;</span><br><span class="line">                    return s！=null;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">    .subscribe(mSubscriber);</span><br></pre></td></tr></table></figure>
-
-<p>上面就是一个非常简易的RxJava流式API的调用：同一个调用主体一路调用下来，一气呵成。<br>所以为了保证流式API的调用风格,才用了这种反人类的逻辑;</p>
-<p>由于被观察者产生事件，是事件的起点，那么开头就是用Observable这个主体调用来创建被观察者，产生事件，<br>为了保证流式API调用规则，就直接让Observable作为唯一的调用主体，一路调用下去。</p>
-<h1 id="操作符"><a href="#操作符" class="headerlink" title="操作符"></a>操作符</h1><p>操作符的分类:</p>
-<ul>
-<li>转换类操作符:(map flatMap concatMap flatMapIterable switchMap scan groupBy…)；</li>
-<li>过滤类操作符:(fileter take takeLast takeUntil distinct distinctUntilChanged skip skipLast …)；</li>
-<li>组合类操作符:(merge zip join combineLatest and/when/then switch startSwitch…)。</li>
-</ul>
-<p>接下来就挑选几个常用的操作符进行讲解:</p>
-<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><p>提供一对一的转换,例如提供的是 url 路径,需要的是对应的 bitmap</p>
-<h2 id="flatmap"><a href="#flatmap" class="headerlink" title="flatmap"></a>flatmap</h2><p>将每个Observable产生的事件里的信息再包装成新的Observable传递出来,并且破除的多层嵌套的难题,<br>因为FlatMap可以再次包装新的Observable,而每个Observable都可以使用from(T[])方法来创建自己，这个方法接受一个列表，然后将列表中的数据包装成一系列事件。</p>
-<p>还记得创建被观察者时的 from 方法吗,被观察者提供一个数组给 from 方法,被观察者都能将数组中的每个元素转换为被观察者,然后执行观察者的方法.</p>
-<p>flatMap 每使用一个 from 方法,就该表一次 for 循环,将一个数组中的元素转换为单个被观察者,仅仅使用from,就该表一层循环,多层嵌套的循环就使用多次from()方法<br>是的代码看起来并没有嵌套的那么复杂,背后的原理就是使用from</p>
-<p>所谓 flat就是:我们传入的是一个年级(包含多个班,每个班都多个同学,打印每个同学的姓名),第一步用form已经将年级拆成了多个班,但这不是终极目的,而是在将每个班的每个同学对应过来;回想之前的处理逻辑,每产生一个事件,不等待,直接发出去,但是现在不同,要等一个班的from结束之后(攒齐这个班所有同学,然后再一次发出去),接下来在解析下一个班</p>
-<h2 id="concatMap"><a href="#concatMap" class="headerlink" title="concatMap"></a>concatMap</h2><p>concatMap()解决了flatMap()的交叉问题，它能够把发射的值连续在一起.</p>
-<h2 id="flatMapIterable"><a href="#flatMapIterable" class="headerlink" title="flatMapIterable"></a>flatMapIterable</h2><p>flatMapIterable()和flatMap()几乎是一样的，不同的是flatMapIterable()它转化的多个Observable是使用Iterable作为源数据的。(示例代码如下)并没有看出来什么区别,还是使用flatmap吧</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Observable.from(communities)</span><br><span class="line">        .flatMapIterable(<span class="keyword">new</span> Func1&lt;Community, Iterable&lt;House&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Iterable&lt;House&gt; <span class="title">call</span><span class="params">(Community community)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> community.houses;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .subscribe(<span class="keyword">new</span> Action1&lt;House&gt;() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(House house)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="switchMap"><a href="#switchMap" class="headerlink" title="switchMap"></a>switchMap</h2><p>switchMap()和flatMap()很像，除了一点：每当源Observable发射一个新的数据项（Observable）时，它将取消订阅并停止监视之前那个数据项产生的Observable，并开始监视当前发射的这一个。(也不懂什么使用场景,只知道是只监听当前的事件,只要一发送,过去的事件不在监听,只管理现在的事件)</p>
-<h2 id="scan"><a href="#scan" class="headerlink" title="scan"></a>scan</h2><p>scan()对一个序列的数据应用一个函数，并将这个函数的结果发射出去作为下个数据应用合格函数时的第一个参数使用.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .scan(<span class="keyword">new</span> Func2&lt;Integer, Integer, Integer&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Integer <span class="title">call</span><span class="params">(Integer integer, Integer integer2)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> integer + integer2;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;).subscribe(<span class="keyword">new</span> Action1&lt;Integer&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Integer integer)</span> </span>&#123;</span><br><span class="line">        System.out.print(integer+“ ”);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>输出结果是:1,3,6,10,15<br>1 = 1<br>3 = 1+2<br>6 = 3+3<br>10 = 6+4<br>15 = 10+5;<br>实现的函数是两个整数相加,第一个整数时,默认第0个数是0,后面进来一个数就和当前计算的结果相加;</p>
-<h2 id="groupBy"><a href="#groupBy" class="headerlink" title="groupBy"></a>groupBy</h2><p>groupBy()将原始Observable发射的数据按照key来拆分成一些小的Observable，然后这些小Observable分别发射其所包含的的数据，和SQL中的groupBy类似。实际使用中，我们需要提供一个生成key的规则（也就是Func1中的call方法），所有key相同的数据会包含在同一个小的Observable中。另外我们还可以提供一个函数来对这些数据进行转化，有点类似于集成了flatMap。这只是在顺序上进行了调整,在观察者方收到数据的顺序是相同key的是临近的.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">List&lt;House&gt; houses = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">houses.add(<span class="keyword">new</span> House(<span class="string">"中粮·海景壹号"</span>, <span class="string">"中粮海景壹号新出大平层！总价4500W起"</span>));</span><br><span class="line">houses.add(<span class="keyword">new</span> House(<span class="string">"竹园新村"</span>, <span class="string">"满五唯一，黄金地段"</span>));</span><br><span class="line">houses.add(<span class="keyword">new</span> House(<span class="string">"中粮·海景壹号"</span>, <span class="string">"毗邻汤臣一品"</span>));</span><br><span class="line">houses.add(<span class="keyword">new</span> House(<span class="string">"竹园新村"</span>, <span class="string">"顶层户型，两室一厅"</span>));</span><br><span class="line">houses.add(<span class="keyword">new</span> House(<span class="string">"中粮·海景壹号"</span>, <span class="string">"南北通透，豪华五房"</span>));</span><br><span class="line">Observable&lt;GroupedObservable&lt;String, House&gt;&gt; groupByCommunityNameObservable = Observable.from(houses)</span><br><span class="line">        .groupBy(<span class="keyword">new</span> Func1&lt;House, String&gt;() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">(House house)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//生成key的规则,根据communityName相同的分为一组;</span></span><br><span class="line">                <span class="keyword">return</span> house.communityName;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-
-<p>执行结果:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">小区:中粮·海景壹号; 房源描述:中粮海景壹号新出大平层！总价4500W起</span><br><span class="line">小区:中粮·海景壹号; 房源描述:毗邻汤臣一品</span><br><span class="line">小区:中粮·海景壹号; 房源描述:南北通透，豪华五房</span><br><span class="line">小区:竹园新村; 房源描述:满五唯一，黄金地段</span><br><span class="line">小区:竹园新村; 房源描述:顶层户型，两室一厅</span><br></pre></td></tr></table></figure>
-
-<h2 id="Filter"><a href="#Filter" class="headerlink" title="Filter"></a><strong>Filter</strong></h2><p><strong>filter(Func1)</strong>用来过滤观测序列中我们不想要的值，只返回满足条件的值</p>
-<p>还是拿前面文章中的小区Community[] communities来举例，假设我需要赛选出所有房源数大于10个的小区，我们可以这样实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Observable.from(communities)</span><br><span class="line">        .filter(<span class="keyword">new</span> Func1&lt;Community, Boolean&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Boolean <span class="title">call</span><span class="params">(Community community)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> community.houses.size()&gt;<span class="number">10</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).subscribe(<span class="keyword">new</span> Action1&lt;Community&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Community community)</span> </span>&#123;</span><br><span class="line">        System.out.println(community.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="take"><a href="#take" class="headerlink" title="take"></a>take</h2><p><strong>take(int)</strong>用一个整数n作为一个参数，从原始的序列中发射前n个元素</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Observable.from(communities)</span><br><span class="line">    .take(<span class="number">10</span>)</span><br><span class="line">    .subscribe(<span class="keyword">new</span> Action1&lt;Community&gt;() &#123;</span><br><span class="line">      <span class="meta">@Override</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Community community)</span> </span>&#123;</span><br><span class="line">        System.out.println(community.name);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
-
-<p><strong>但是后面的数据怎么办?</strong></p>
-<h2 id="takeLast"><a href="#takeLast" class="headerlink" title="takeLast"></a>takeLast</h2><p><strong>takeLast(int)</strong>同样用一个整数n作为参数，只不过它发射的是观测序列中后n个元素。</p>
-<h2 id="takeUntil"><a href="#takeUntil" class="headerlink" title="takeUntil"></a>takeUntil</h2><p><strong>takeUntil(Observable)</strong>订阅并开始发射原始Observable，同时监视我们提供的第二个Observable。如果第二个Observable发射了一项数据或者发射了一个终止通知，takeUntil()返回的Observable会停止发射原始Observable并终止。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Observable&lt;Long&gt; observableA = Observable.interval(<span class="number">300</span>, TimeUnit.MILLISECONDS);</span><br><span class="line">Observable&lt;Long&gt; observableB = Observable.interval(<span class="number">800</span>, TimeUnit.MILLISECONDS);</span><br><span class="line"></span><br><span class="line">observableA.takeUntil(observableB)</span><br><span class="line">        .subscribe(<span class="keyword">new</span> Subscriber&lt;Long&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompleted</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                System.exit(<span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable e)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(Long aLong)</span> </span>&#123;</span><br><span class="line">                System.out.println(aLong);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    Thread.sleep(Integer.MAX_VALUE);</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>程序的输出:0,1</p>
-<p><strong>takeUntil(Func1)</strong>还可以通过Func1中的call方法来判断是否需要终止发射数据。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>)</span><br><span class="line">                .takeUntil(<span class="keyword">new</span> Func1&lt;Integer, Boolean&gt;() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> Boolean <span class="title">call</span><span class="params">(Integer integer)</span> </span>&#123;</span><br><span class="line">                        <span class="keyword">return</span> integer &gt;= <span class="number">5</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;).subscribe(<span class="keyword">new</span> Action1&lt;Integer&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Integer integer)</span> </span>&#123;</span><br><span class="line">                System.out.println(integer);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-
-<p>输出结果:1,2,3,4</p>
-<h1 id="线程调度"><a href="#线程调度" class="headerlink" title="线程调度"></a>线程调度</h1><p>异步是相对于主线程来讲的子线程操作，在这里我们不妨使用线程调度这个概念更加贴切。</p>
-<p>Scheduler:调度器,用于线程控制</p>
-<ul>
-<li>Scheduler.immediate()  默认当前线程,不写就是这个,一般不写</li>
-<li>Scheduler.newThread()  每次都创建新线程去执行,消耗大,不建议用</li>
-<li>Scheduler.io()  IO密集型任务(eg:异步阻塞IO操作),默认是一个 CacheThreadScheduler,从线程池中去取一个线程,</li>
-<li>Scheduler.computation() CPU密集计算线程,线程池中的线程数和CPU核心数一致,多用于处理图形界面大量的计算或者事件循环;</li>
-<li>Scheduler.trampoline() 当其它排队的任务完成后,当前线程排队开始执行;</li>
-<li>AndroidScheduler.mainThread() Android 的 UI 线程</li>
-</ul>
-<p>实际上线程调度只有subscribeOn（）和observeOn（）两个方法。对于初学者，只需要掌握两点：</p>
-<ol>
-<li>subscribeOn（）它指示Observable在一个指定的调度器上创建（只作用于被观察者创建阶段）。只能指定一次，如果指定多次则以第一次为准</li>
-<li>observeOn（）指定在事件传递（加工变换）和最终被处理（观察者）的发生在哪一个调度器。可指定多次，每次指定完都在下一步生效。</li>
-</ol>
-<p>线程调度掌握到这个程度，在入门阶段时绝对够用的了。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(getFilePath())</span><br><span class="line">          <span class="comment">//指定在新线程中创建被观察者 Observable</span></span><br><span class="line">         .subscribeOn(Schedulers.newThread())</span><br><span class="line">     <span class="comment">//将接下来执行的线程环境指定为io线程,必须要先制定下面操作的线程,然后再指定操作;</span></span><br><span class="line">         .observeOn(Schedulers.io())</span><br><span class="line">           <span class="comment">//map就处在io线程</span></span><br><span class="line">         .map(mMapOperater)</span><br><span class="line">           <span class="comment">//将后面执行的线程环境切换为主线程，</span></span><br><span class="line">           <span class="comment">//但是这一句 observeOn 依然执行在io线程</span></span><br><span class="line">         .observeOn(AndroidSchedulers.mainThread())</span><br><span class="line">         <span class="comment">//指定线程无效，但这句代码本身执行在主线程,一个操作只能制定一个 subscribeOn,多了以第一个为准;</span></span><br><span class="line">         .subscribeOn(Schedulers.io())</span><br><span class="line">         <span class="comment">//执行在主线程</span></span><br><span class="line">         .subscribe(mSubscriber);</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1350,7 +1292,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1430,7 +1372,7 @@
     
       <span class="post-meta-item-text">站点文章字数总计&#58;</span>
     
-    <span title="站点文章字数总计">147.0k</span>
+    <span title="站点文章字数总计">147.7k</span>
   
 </div>
 

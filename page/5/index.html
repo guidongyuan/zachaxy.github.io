@@ -336,6 +336,159 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/12/10/MOP——方法注入/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zachaxy">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zachaxy">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/10/MOP——方法注入/" itemprop="url">MOP——方法注入</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-10T11:45:09+08:00">
+                2017-12-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,358
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>前面<a href="https://zachaxy.github.io/2017/12/09/MOP%E2%80%94%E2%80%94%E6%96%B9%E6%B3%95%E6%8B%A6%E6%88%AA/">MOP——方法拦截</a>介绍了利用 MOP 对方法的调用进行拦截，接下来要介绍利用 MOP 实现方法的注入。</p>
+<h1 id="方法拦截和方法注入的区别"><a href="#方法拦截和方法注入的区别" class="headerlink" title="方法拦截和方法注入的区别"></a>方法拦截和方法注入的区别</h1><p>拦截：侧重对于<strong>已有的方法</strong>的调用进行拦截<br>注入：对一个已有的类<strong>添加新方法</strong>，以拓展该类的功能。</p>
+<p>eg：Java 中提供了 String 的类，如果我们想扩展该类，为其提供一个字符串加密方法。在 Java 中，最常见的做法是提供一个接口，内有 encrypt() 方法，让目标类实现该接口；或者继承该类，然后添加一个 encrypt() 方法。但是这里存在的问题是：我们未必可以修改想要扩展的类，就像 String，还是 final 的，只能用，不能改。</p>
+<p>不过使用 Groovy，就可以方便的为任何类扩展方法，同时在使用起来，给人的感觉就好像注入的类是该类本身就有的。</p>
+<p>MOP 的注入有四种实现方式：</p>
+<ol>
+<li>分类(Category)</li>
+<li>ExpandoMetaClass</li>
+<li>Minxin</li>
+<li>trait</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/12/10/MOP——方法注入/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/12/09/MOP——方法拦截/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1089,154 +1242,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/12/05/Groovy-相对-Java-的一些新玩意/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zachaxy">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zachaxy">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/05/Groovy-相对-Java-的一些新玩意/" itemprop="url">Groovy 相对 Java 的一些新玩意</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-05T20:03:55+08:00">
-                2017-12-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2,155
-                </span>
-              
-
-              
-
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Groovy-是轻量级的-Java"><a href="#Groovy-是轻量级的-Java" class="headerlink" title="Groovy 是轻量级的 Java"></a>Groovy 是轻量级的 Java</h1><ul>
-<li>方法，闭包中 return 语句是可选的，如果没有 return，则默认返回方法、闭包的最后一条语句的值</li>
-<li>方法和类默认的修饰符都是 public</li>
-<li>Groovy 不强迫我们捕获自己不关系的异常，这些异常会被传递给方法的调用者</li>
-<li>静态方法中也可以使用 this 来引用当前的静态类 Class 对象。</li>
-<li>提供安全导航操作符 <code>.?</code> 来避免对象非空的判断
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/12/05/Groovy-相对-Java-的一些新玩意/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </li></ul></div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1291,7 +1296,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1371,7 +1376,7 @@
     
       <span class="post-meta-item-text">站点文章字数总计&#58;</span>
     
-    <span title="站点文章字数总计">147.0k</span>
+    <span title="站点文章字数总计">147.7k</span>
   
 </div>
 

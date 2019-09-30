@@ -336,6 +336,149 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/05/07/手写JVM系列-2-参数解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zachaxy">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zachaxy">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/07/手写JVM系列-2-参数解析/" itemprop="url">手写JVM系列(2)-参数解析</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-07T10:53:02+08:00">
+                2017-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,257
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>这一章节开始<code>JVM</code>的编写,首先解决第一个问题,就是如何运行java程序，回想最开始学java时，写一个Hello.java的程序，使用<code>javac Hello.java</code>将源代码转换为class文件，然后使用<code>java Hello</code>运行程序。JVM是只认class文件的，如果想让JVM运行该Hello程序，就要通过java命令。本节将介绍java命令的常用方法，并实现java命令的解析。最终通过命令参数，读取对应的class数据。本节的代码均在<a href="https://github.com/zachaxy/JVM" target="_blank" rel="noopener">classpath包</a>下</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/05/07/手写JVM系列-2-参数解析/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/05/06/手写JVM系列-1-准备工作/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1116,159 +1259,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zachaxy.github.io/2017/04/10/广度优先算法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zachaxy">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zachaxy">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/04/10/广度优先算法/" itemprop="url">广度优先算法</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-10T19:05:21+08:00">
-                2017-04-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,024
-                </span>
-              
-
-              
-
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>BFS（Breadth First Search）广度优先遍历，从图的某一结点出发，首先依次访问该结点的所有邻接顶点 Vi1, Vi2, …, Vin 再按这些顶点被访问的先后次序依次访问与它们相邻接的所有未被访问的顶点，重复此过程，直至所有顶点均被访问为止。</p>
-</blockquote>
-<p>广度优先一般使用队列来完成,不需要使用递归,相对来说比较简单,接下来是一个广度优先算法的一个模板</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 顶点数</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> number = <span class="number">9</span>;</span><br><span class="line"><span class="comment">// 记录顶点是否被访问</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">boolean</span>[] flag;</span><br><span class="line"><span class="comment">// 顶点</span></span><br><span class="line"><span class="keyword">private</span> String[] vertexs = &#123; <span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>, <span class="string">"D"</span>, <span class="string">"E"</span>, <span class="string">"F"</span>, <span class="string">"G"</span>, <span class="string">"H"</span>, <span class="string">"I"</span> &#125;;</span><br><span class="line"><span class="comment">// 边</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span>[][] edges = &#123; </span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span> &#125;, </span><br><span class="line">        &#123; <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span> &#125;, </span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span> &#125;,</span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span> &#125;,</span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span> &#125;, </span><br><span class="line">        &#123; <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span> &#125;,</span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span> &#125;,</span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span> &#125;, </span><br><span class="line">        &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> &#125; </span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 图的广度遍历操作</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BFSTraverse</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    flag = <span class="keyword">new</span> <span class="keyword">boolean</span>[number];</span><br><span class="line">    Queue&lt;Integer&gt; queue = <span class="keyword">new</span> LinkedList&lt;Integer&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; number; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (flag[i] == <span class="keyword">false</span>) &#123;</span><br><span class="line">            flag[i] = <span class="keyword">true</span>;</span><br><span class="line">            System.out.print(vertexs[i] + <span class="string">" "</span>);</span><br><span class="line">            queue.add(i);</span><br><span class="line">            <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">                <span class="keyword">int</span> j = queue.poll();</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; number; k++) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (edges[j][k] == <span class="number">1</span> &amp;&amp; flag[k] == <span class="keyword">false</span>) &#123;</span><br><span class="line">                        flag[k] = <span class="keyword">true</span>;</span><br><span class="line">                        System.out.print(vertexs[k] + <span class="string">" "</span>);</span><br><span class="line">                        queue.add(k);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>还是用九个顶点的图来作为示例,首先,创建一个标志数组,用来标示该顶点有没有被访问过,接下来,从第一个顶点开始(其实任意一个顶点都可以),将该顶点加入到队列中,接下来开启循环,拿出队列头部的一个节点,如果该队列有邻接的节点,那么将邻接节点添加到队列中,直到有所节点都被访问完为止.</p>
-<blockquote>
-<p>运行结果:</p>
-<p>A-&gt;B-&gt;F-&gt;G-&gt;C-&gt;I-&gt;E-&gt;D-&gt;H</p>
-</blockquote>
-<p>广度优先遍历一个典型的题目就是按照二叉树的层次打印节点的值.</p>
-<p>当然也可以解决最短路径的问题,如果只要求输出最短路径的长度,这个时间复杂度是比深度优先好的,但是如果要把最短的路径打印出来,广度优先就显得无能为力了,还是要用深度优先.还是前一篇文章<a href="https://zachaxy.github.io/2017/04/10/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E7%AE%97%E6%B3%95/">深度优先算法</a>中走迷宫的例子,我们这次使用广广度优先,只输出最短路径的值,不打印具体路径;</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">int</span>[][] arr = &#123;</span><br><span class="line">        &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>&#125;,</span><br><span class="line">        &#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&#125;,</span><br><span class="line">        &#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>&#125;,</span><br><span class="line">        &#123;<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>&#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Pair</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.i = i;</span><br><span class="line">        <span class="keyword">this</span>.j = j;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> i + <span class="string">"&lt;&gt;"</span> + j;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bfs</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    LinkedList&lt;Pair&gt; queue = <span class="keyword">new</span> LinkedList&lt;Pair&gt;();</span><br><span class="line">    queue.add(<span class="keyword">new</span> Pair(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">int</span> level = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> preCount = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> curCount = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">        <span class="comment">//首先把当前层的全部都拿出来</span></span><br><span class="line">        <span class="keyword">while</span> (preCount-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            Pair pair = queue.poll();</span><br><span class="line">          <span class="comment">//如果走到的右下角,打印层次,结束程序</span></span><br><span class="line">            <span class="keyword">if</span> (pair.i == arr.length - <span class="number">1</span> &amp;&amp; pair.j == arr[<span class="number">0</span>].length - <span class="number">1</span>) &#123;</span><br><span class="line">                System.out.println(level);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//向下</span></span><br><span class="line">            <span class="keyword">if</span> (pair.i + <span class="number">1</span> &lt; arr.length &amp;&amp; !dp[pair.i + <span class="number">1</span>][pair.j] &amp;&amp; arr[pair.i + <span class="number">1</span>][pair.j] == <span class="number">0</span>) &#123;</span><br><span class="line">                dp[pair.i + <span class="number">1</span>][pair.j] = <span class="keyword">true</span>;</span><br><span class="line">                queue.offer(<span class="keyword">new</span> Pair(pair.i + <span class="number">1</span>, pair.j));</span><br><span class="line">                curCount++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//向右</span></span><br><span class="line">            <span class="keyword">if</span> (pair.j + <span class="number">1</span> &lt; arr[<span class="number">0</span>].length &amp;&amp; !dp[pair.i][pair.j + <span class="number">1</span>] &amp;&amp; arr[pair.i][pair.j + <span class="number">1</span>] == <span class="number">0</span>) &#123;</span><br><span class="line">                dp[pair.i][pair.j + <span class="number">1</span>] = <span class="keyword">true</span>;</span><br><span class="line">                queue.offer(<span class="keyword">new</span> Pair(pair.i, pair.j + <span class="number">1</span>));</span><br><span class="line">                curCount++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//向上</span></span><br><span class="line">            <span class="keyword">if</span> (pair.i - <span class="number">1</span> &gt;= <span class="number">0</span> &amp;&amp; !dp[pair.i - <span class="number">1</span>][pair.j] &amp;&amp; arr[pair.i - <span class="number">1</span>][pair.j] == <span class="number">0</span>) &#123;</span><br><span class="line">                dp[pair.i - <span class="number">1</span>][pair.j] = <span class="keyword">true</span>;</span><br><span class="line">                queue.offer(<span class="keyword">new</span> Pair(pair.i - <span class="number">1</span>, pair.j));</span><br><span class="line">                curCount++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//向左</span></span><br><span class="line">            <span class="keyword">if</span> (pair.j - <span class="number">1</span> &gt;= <span class="number">0</span> &amp;&amp; !dp[pair.i][pair.j - <span class="number">1</span>] &amp;&amp; arr[pair.i][pair.j - <span class="number">1</span>] == <span class="number">0</span>) &#123;</span><br><span class="line">                dp[pair.i][pair.j - <span class="number">1</span>] = <span class="keyword">true</span>;</span><br><span class="line">                queue.offer(<span class="keyword">new</span> Pair(pair.i, pair.j - <span class="number">1</span>));</span><br><span class="line">                curCount++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        preCount = curCount;</span><br><span class="line">        curCount = <span class="number">0</span>;</span><br><span class="line">        level++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1323,7 +1313,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1403,7 +1393,7 @@
     
       <span class="post-meta-item-text">站点文章字数总计&#58;</span>
     
-    <span title="站点文章字数总计">147.0k</span>
+    <span title="站点文章字数总计">147.7k</span>
   
 </div>
 
