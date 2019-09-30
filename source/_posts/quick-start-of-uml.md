@@ -141,6 +141,7 @@ end note
 ```
 
  # 参考连接
+ - [对象图](http://plantuml.com/zh/object-diagram)
 - [用VS Code画uml](https://blog.csdn.net/qq_26819733/article/details/84895850)
 - [使用PlantUML快速绘图](https://blog.csdn.net/zxc123e/article/details/71837923)
 - [UML Class Diagram Tutorial](https://www.youtube.com/watch?v=UI6lqHOVHic)
