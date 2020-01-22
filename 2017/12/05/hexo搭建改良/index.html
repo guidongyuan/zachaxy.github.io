@@ -138,7 +138,7 @@
 <meta property="og:site_name" content="zachaxy">
 <meta property="og:description" content="hexo 搭建改良之前使用hexo 搭建博客过程全纪录已经可以成功的搭建一个 hexo 的博客了，使用了一段时间之后，发现了一个问题，就是博客只能在当前的这台 pc 上发布，但是有时候想在家也写写博客并立即发布，之前的博客只能基于单终端的发布。因此在多个端上进行 hexo 的同步成为当前需要解决的问题，为此，我这里进行了三次改进。通过不断的改良，也使我对 hexo 有了进一步的了解。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-01T16:20:46.427Z">
+<meta property="og:updated_time" content="2020-01-22T16:52:57.365Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hexo搭建改良">
 <meta name="twitter:description" content="hexo 搭建改良之前使用hexo 搭建博客过程全纪录已经可以成功的搭建一个 hexo 的博客了，使用了一段时间之后，发现了一个问题，就是博客只能在当前的这台 pc 上发布，但是有时候想在家也写写博客并立即发布，之前的博客只能基于单终端的发布。因此在多个端上进行 hexo 的同步成为当前需要解决的问题，为此，我这里进行了三次改进。通过不断的改良，也使我对 hexo 有了进一步的了解。">
@@ -397,7 +397,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,431
+                  3,683
                 </span>
               
 
@@ -445,7 +445,7 @@
 <h1 id="探索改进之旅"><a href="#探索改进之旅" class="headerlink" title="探索改进之旅"></a>探索改进之旅</h1><p>这里的改进主要是解决多终端同步问题。</p>
 <h2 id="最原始最简单的方法"><a href="#最原始最简单的方法" class="headerlink" title="最原始最简单的方法"></a>最原始最简单的方法</h2><p>在了解了上面 GitPage 和 Hexo 所做的工作之后，我萌生了一个最简单的方法：在另一台电脑 pcB 上安装 Node.js。然后直接将 pcA 上的执行<code>hexo init</code>的文件夹(例如我的是：<code>E:/blogs</code>)拷贝到另一台 pcB 上，这样就可以直接用了，可以说是无缝连接。</p>
 <p>缺点：如果你两台电脑交互发布文章的太频繁，老是这样将文件夹拷贝来拷贝去，也很麻烦。</p>
-<p>使用情况：如果你之前长期 pcA 上发布文章，后来换了台电脑，以后准备长期在 pcB 上发布文章，那么这种方法最适合不过了。</p>
+<p>适用情况：如果你之前长期 pcA 上发布文章，后来换了台电脑，以后准备长期在 pcB 上发布文章，那么这种方法最适合不过了。</p>
 <h2 id="两个仓库"><a href="#两个仓库" class="headerlink" title="两个仓库"></a>两个仓库</h2><p>前面也说过博客中最重要的是 markdown 的源文件。而在<code>username.github.io</code>的代码库中保存的是博客文件夹的 public 下的内容。之前也想过用两个分支来解决。但是<a href="https://zachaxy.github.io/2017/03/30/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E8%BF%87%E7%A8%8B%E5%85%A8%E7%BA%AA%E5%BD%95/">hexo 搭建博客过程全纪录</a>的做法，二者并不在同一目录级别。无法实现用一个仓库再将博客文件夹下的 source 文件进行上传。故采用了两个仓库的做法。即新建一个仓库<code>MyBlogBackup</code>用来保存 markdown 源文件。</p>
 <p>注意：这种解决方案是针对使用<a href="https://zachaxy.github.io/2017/03/30/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E8%BF%87%E7%A8%8B%E5%85%A8%E7%BA%AA%E5%BD%95/">hexo 搭建博客过程全纪录</a>搭建博客为前提的。其它情况则不适用。这里贴出所写的脚本文件：</p>
 <p>发布文章的脚本：</p>
@@ -455,14 +455,14 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">if [ $# -ne 1 ]</span><br><span class="line">then</span><br><span class="line">	echo "the args count must equal 1,the arg we need is the name of the file you want to delete\n";</span><br><span class="line">elif [ ! -d "source/_posts/$1" ]</span><br><span class="line">then</span><br><span class="line">	echo "No such file or directory"</span><br><span class="line">	exit 2;</span><br><span class="line">else</span><br><span class="line"><span class="meta">#</span>first rm the file in both file system and local git</span><br><span class="line">	rm "source/_posts/$1"</span><br><span class="line">	git add .</span><br><span class="line">	git commit -m "delete file"</span><br><span class="line">	git push origin master</span><br><span class="line"><span class="meta">#</span>second cover the change to GitPage</span><br><span class="line">	hexo generate</span><br><span class="line">	cp -R public/* .deploy/zachaxy.github.io</span><br><span class="line">	cd .deploy/zachaxy.github.io</span><br><span class="line">	git add .</span><br><span class="line">	git commit -m  "update"</span><br><span class="line">	git push origin master</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 
 <p>再次回顾下用到的两个仓库：<code>/MyBlog/.deploy/username.github.io</code>以及<code>MyBlogBackup</code></p>
-<p>简单说一下思路：在新的终端，先用<code>hexo n</code>创建并写文章，然后执行发布脚本，该脚本会先将<code>MyBlogBackup</code>中的 markdown 同步到本地，然后用<code>hexo g</code>生成 html 文件。接下来再进入<code>.deploy</code>下的<code>username.github.io</code>的仓库,将代码 pull 下来，然后将刚刚生成的 public 下的 html 文件将仓库的文件强行覆盖。<br>按说相同的 markdown 文件用相同的主题生成的 html 文件是一样的，但是为了避免平台，hexo 版本的差异，这里还是要进行覆盖吧。</p>
+<p>简单说一下思路：在新的终端，先用<code>hexo n</code>创建并写文章，然后执行发布脚本，该脚本会先将<code>MyBlogBackup</code>中的 markdown 同步到本地，然后用<code>hexo g</code>生成 html 文件。接下来再进入<code>.deploy</code>下的<code>username.github.io</code>的仓库,将代码 pull 下来，然后将刚刚生成的 public 下的 html 文件将仓库的文件强行覆盖。<br>按说相同的 markdown 文件用相同的主题生成的 html 文件是一样的，但是为了避免平台差异，hexo 版本的差异，这里还是要进行覆盖吧。</p>
 <p>缺点：两个仓库的隔离性很高，而且目前的脚本很难称得上自动化，每次在另一个终端写博客时，都要谨记脚本的执行顺序，这些都需要人工记忆，而无法用代码约束。同时删除文件的维护成本也很高。但是作为一次尝试，它也解决了多终端同步的问题。</p>
 <h2 id="一个仓库，两个分支"><a href="#一个仓库，两个分支" class="headerlink" title="一个仓库，两个分支"></a>一个仓库，两个分支</h2><p>这是我目前使用的解决方案。下面进行详细说明。</p>
 <p>刚开始自己是按照<a href="https://zachaxy.github.io/2017/03/30/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E8%BF%87%E7%A8%8B%E5%85%A8%E7%BA%AA%E5%BD%95/">hexo 搭建博客过程全纪录</a>来搭建的，也是参考的别人的文章。一切顺利，但是和网上其它的教程有点不一样。不一样的地方在于发布文章的时候，这篇文章的做法并没有使用<code>hexo d</code>,而在博客文件夹下再创建一个 .deploy 的文件夹(当然文件夹的名字随意)，并创建一个 git 仓库，然后把用 hexo 生成的 html 文件(在 public 文件夹下)全部拷贝到.deploy 下，然后将直接把.deploy 下的代码全部 push。</p>
 <p>刚开始我以为这种操作才是正统，后来看文章，发现更多的人用的是 <code>hexo d</code> 。其实这里并没有什么正统不正统，只是经历过这个事情之后，我们可以认定，<code>hexo d</code>干的事情就是把 public 中的文件 push 到远程。<br>在使用两个仓库的方法中，我也想过用两个分支的思路，但是不在同一个目录中，似乎不能作为两个分支。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Blogs</span><br><span class="line">	public</span><br><span class="line">		需要向 username.github.io push 的所有文件</span><br><span class="line">	source</span><br><span class="line">		_post</span><br><span class="line">			*.md</span><br></pre></td></tr></table></figure>
 
-<p>这种目录结构创建两个分支，一个保存 _post 下的 md 文件，一个分支保存 public 下的文件。那么在初始化 git 仓库时在那个目录下？<br>这里肯定是要找二者的公共目录 Blogs，但是如果我们直接在 Blogs 下进行 git init，那么在上传 public 下的文件时是不符合 GitPage 的要求的，因为 GitPage 要求 public 下的文件必须作为仓库的一级目录。而我们这样做的话，一级目录就是 public 了。</p>
+<p>这种目录结构创建两个分支，一个分支保存 _post 下的 md 文件，一个分支保存 public 下的文件。那么在初始化 git 仓库时在那个目录下？<br>这里肯定是要找二者的公共目录 Blogs，但是如果我们直接在 Blogs 下进行 git init，那么在上传 public 下的文件时是不符合 GitPage 的要求的，因为 GitPage 要求 public 下的文件必须作为仓库的一级目录。而我们这样做的话，一级目录就是 public 了。</p>
 <p>后来经过试验，发现了使用多分支进行 hexo 同步的方法。<br>两个分支：一个分支我们可以叫 hexo，该分支主要是保存 markdown 源文件，hexo 配置文件。该分支需要我们手动创建，并把该分支设为默认分支。具体步骤如下：</p>
 <ol>
 <li>在 github 创建<code>username.github.io</code>的仓库</li>
@@ -473,8 +473,11 @@
 <li>接下来用 hexo n xxx`创建并写文章。</li>
 <li>写好文章后先不着急发布，先添加以下远程代码库 <code>git remote add origin git@github.com:zachaxy/zachaxy.github.io.git</code></li>
 <li>将 markdown 源文件发布上去，具体的 ignore 文件如下。注意发布的远程仓库名 <code>git push -u origin hexo</code>。其实 master 只是默认的主分支，这个名字完全可以修改，而且在刚创建的仓库第一次这样提交时，指明远程的仓库叫 hexo，那么其默认分支就是 hexo</li>
-<li>接下里生成并发布文章，使用<code>hexo g -d</code>，其会按照 _config.yml 中关于 deploy 的配置，自动创建 master 分支，并将 public 下的文件作为一级目录 push 到 master 分支中。</li>
+<li>接下来生成并发布文章，使用<code>hexo g -d</code>，其会按照 _config.yml 中关于 deploy 的配置，自动创建 master 分支，并将 public 下的文件作为一级目录 push 到 master 分支中。</li>
 </ol>
+<blockquote>
+<p>git仓库的创建是不允许嵌套的，也就是在父目录下创建git，然后又在子目录下创建git仓库。如果子目录下也有一个仓库，对子目录是没有影响的，子目录只会维护自己目录下的文件修改，但是回到父目录，执行 <code>git add .</code> 的时候，就会提示当前路径下，包含一个子目录的仓库，无法执行。 那么换一个思路，我们将子目录添加在父目录的 gitignore 文件中，那么就有可以实现同一个仓库，两个分支，其中一个分支记录子目录下的文件变更，而父目录忽略该子目录，记录其他文件即可。猜想 hexo 也是这样做的，在执行 <code>hexo -d</code> 的时候，也是将 <code>hexo g</code> 生成的 public 下的文件，拷贝到 <code>.deploy_git</code> 文件夹下,同时父目录下又忽略该文件夹，即可实现上述操作。</p>
+</blockquote>
 <p>ignore 文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.log</span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br></pre></td></tr></table></figure>
 
@@ -720,7 +723,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -734,7 +737,7 @@
     
       <span class="post-meta-item-text">站点文章字数总计&#58;</span>
     
-    <span title="站点文章字数总计">147.7k</span>
+    <span title="站点文章字数总计">147.9k</span>
   
 </div>
 
