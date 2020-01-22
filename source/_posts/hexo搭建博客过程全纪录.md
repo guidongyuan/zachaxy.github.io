@@ -28,7 +28,7 @@ mathjax: true
       ```
       $ ssh-keygen -t rsa -C "邮件地址@youremail.com"  //这个邮箱地址就是你注册github使用的邮箱
       Generating public/private rsa key pair.
-      Enter file in which to save the key (/c/Users/zhangxin/.ssh/id_rsa):
+      Enter file in which to save the key (/c/Users/xxx/.ssh/id_rsa):
       ```
 
       第三行是在询问你将生成的ssh key放在哪里默认是你的用户目录,这里直接回车就好
@@ -134,8 +134,8 @@ mathjax: true
 
 经过上面的步骤之后,就可以开始写博客并上传到github上了,步骤如下:
 
-1. 进入到`Blogs`文件加下,运行`hexo n "博客文件名"`
-2. 找到`Blogs/source/_posts/xxx`其中xxx是第一步新键的博客文件名,默认为`.md文件`
+1. 进入到`blogs`文件加下,运行`hexo n "博客文件名"`
+2. 找到`blogs/source/_posts/xxx`其中xxx是第一步新键的博客文件名,默认为`.md文件`
 3. 打开该文件,书写博客,保存
 4. `执行 ./ok.sh`,中间可能会遇到让你输入用户名和密码的情况,输入即可.（关于ok.sh，请看下面的快捷部署）
 
@@ -144,13 +144,13 @@ mathjax: true
 
 # 快捷部署
 
-1. 进入 Hexo 的根目录 接着操作以下命令
+1. 进入之前创建的 blogs 的根目录 接着操作以下命令
 
-   `$ cd Hexo`
+   `$ cd blogs`
 
    注意 1：现在我们需要clone我们自己的GitHub仓库了
 
-   注意 3：切记下面是**你自己的仓库名** , 把名字都改过来 , 下面我用的是我的仓库名字
+   注意 2：切记下面是**你自己的仓库名** , 把名字都改过来 , 下面我用的是我的仓库名字
 
    `$ git clone https://github.com/zachaxy/zachaxy.github.io.git .deploy/zachaxy.github.io`
 
